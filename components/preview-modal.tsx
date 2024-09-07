@@ -5,6 +5,8 @@ import React from 'react'
 import Modal from './ui/modal';
 import Gallery from './gallery/intex';
 import Info from './info';
+import IconButton from './ui/icon-button';
+import { MinusIcon, PlusIcon } from 'lucide-react';
 
 const PreviewModal = () => {
 
@@ -27,6 +29,7 @@ const PreviewModal = () => {
     <div className='sm:col-span-8 lg:col-span-7'>
     <Info data={product} />
     </div>
+
         </div>
     </Modal>
   )
