@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import Buttons from "@/components/ui/Button";
 import Currency from "@/components/ui/currency";
 import { toast } from "react-hot-toast";
-
 import useCart from "@/hooks/use-cart";
 import { Loader } from "@/components/ui/loader";
 
@@ -45,21 +44,35 @@ const Summary = () => {
             return;
         }
     
-        // Validate the delivery information
         if (!companyName || !poNumber || !address || !contactNumber) {
             toast.error("Please fill in all the delivery information fields.");
+            return;
+        }
+    
+        // Ensure all items have a valid quantity
+        const missingQuantities = items.some(item => !item.quantity || item.quantity <= 0);
+        if (missingQuantities) {
+            toast.error("Quantities must be provided for all product IDs.");
             return;
         }
     
         setLoading(true); // Start loading animation
     
         try {
+            // Create an array of order items with totalItemAmount included
+            const orderItems = items.map((item) => ({
+                productId: item.id,
+                quantity: item.quantity,
+                totalItemAmount: Number(item.price) * item.quantity // Calculate total amount for each item
+            }));
+    
+            // Send orderItems and delivery information to the backend
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
-                productsId: items.map((item) => item.id),
-                companyName,  // Send directly
-                poNumber,     // Send directly
-                address,      // Send directly
-                contactNumber,  // Send as 'contact'
+                orderItems, // Include totalItemAmount
+                companyName,
+                poNumber,
+                address,
+                contactNumber,
             });
     
             if (response.status === 201) {
@@ -90,8 +103,8 @@ const Summary = () => {
                                 <span>{item.name}</span>
                                 <span className="ml-4"> ({item.quantity})</span>
                                 <div className="flex flex-row ml-auto items-end">
-    <Currency value={Number(item.price) * item.quantity} />
-</div>
+                                    <Currency value={Number(item.price) * item.quantity} />
+                                </div>
                             </div>
                         </li>
                     ))}
