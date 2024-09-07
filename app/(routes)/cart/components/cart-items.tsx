@@ -60,6 +60,8 @@ const CartItems: React.FC<CartItemsProps> = ({ data }) => {
             </p>
           </div>
           <Currency value={data.price} />
+          <label className="font-semibold text-md text-gray-500 ml-[16px] justify-start">Item description:</label>
+          <li>{data.itemDesc}</li>
         </div>
         <div className="flex items-center gap-4">
             <label className="font-semibold text-black mr-4">Qty:</label>

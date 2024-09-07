@@ -58,6 +58,7 @@ const Info: React.FC<InfoProps> = ({ data }) => {
                     <Currency value={data.price} />
                 </p>
             </div>
+        
             <hr className="my-4" />
             <div>
                 <div className="flex items-center gap-x-4">
@@ -71,7 +72,11 @@ const Info: React.FC<InfoProps> = ({ data }) => {
                         style={{ backgroundColor: data?.color?.value }}
                     />
                 </div>
-                <div className="mt-48 flex flex-row items-center gap-x-3">
+                    <div className="mt-3">
+                    <span className="font-semibold text-gray-500">Item Description</span>
+                    <li className="mt-2">{data?.itemDesc}</li>
+                    </div>
+                <div className="mt-12 flex flex-row items-center gap-x-3">
                     <label className="font-semibold text-black mr-4">Qty:</label>
                     <IconButton onClick={incrementQuantity} icon={<PlusIcon size={15} />} />
                     <input
