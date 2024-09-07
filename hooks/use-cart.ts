@@ -9,6 +9,9 @@ interface CartItem extends Product {
 
 interface CartStore {
     items: CartItem[];
+    temporaryQuantity: number;
+    setTemporaryQuantity: (quantity: number) => void;
+    resetTemporaryQuantity: () => void;
     addItem: (data: Product) => void;
     removeItem: (id: string) => void;
     incrementQuantity: (id: string) => void;
@@ -19,25 +22,28 @@ interface CartStore {
 const useCart = create(
     persist<CartStore>((set, get) => ({
         items: [],
+        temporaryQuantity: 1,
+        setTemporaryQuantity: (quantity: number) => set({ temporaryQuantity: quantity }),
+        resetTemporaryQuantity: () => set({ temporaryQuantity: 1 }),
         addItem: (data: Product) => {
             const currentItems = get().items;
+            const { temporaryQuantity } = get();
             const existingItem = currentItems.find((item) => item.id === data.id);
 
             if (existingItem) {
-                // Update quantity if the item already exists
                 set({
                     items: currentItems.map((item) =>
                         item.id === data.id
-                            ? { ...item, quantity: item.quantity + 1 }
+                            ? { ...item, quantity: item.quantity + temporaryQuantity }
                             : item
                     ),
                 });
                 toast.success("Item quantity updated.");
             } else {
-                // Add new item with quantity 1
-                set({ items: [...currentItems, { ...data, quantity: 1 }] });
+                set({ items: [...currentItems, { ...data, quantity: temporaryQuantity }] });
                 toast.success("Item added to cart.");
             }
+            set({ temporaryQuantity: 1 }); // Reset temporary quantity after adding the item
         },
         removeItem: (id: string) => {
             set({ items: get().items.filter((item) => item.id !== id) });
@@ -60,7 +66,6 @@ const useCart = create(
                         : item
                 ),
             });
-            toast.success("Item quantity updated.");
         },
         removeAll: () => set({ items: [] }),
     }), {

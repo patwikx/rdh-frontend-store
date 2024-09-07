@@ -21,7 +21,6 @@ const Info: React.FC<InfoProps> = ({ data }) => {
 
     // Sync local quantity state with cart item
     useEffect(() => {
-        // Find the item in the cart
         const item = cart.items.find((item) => item.id === data.id);
         if (item) {
             setQuantity(item.quantity);
@@ -36,19 +35,17 @@ const Info: React.FC<InfoProps> = ({ data }) => {
 
     const onAddToCart: MouseEventHandler<HTMLButtonElement> = (event) => {
         event.stopPropagation();
+        cart.setTemporaryQuantity(quantity); // Set temporary quantity
         cart.addItem(data);
-        // Update quantity state after adding to cart
-        setQuantity((prev) => prev === 0 ? 1 : prev); 
+        setQuantity(1); // Reset quantity after adding to cart
     };
 
     const incrementQuantity = () => {
-        cart.incrementQuantity(data.id);
         setQuantity((prev) => prev + 1); // Update local state immediately
     };
 
     const decrementQuantity = () => {
         if (quantity > 1) { // Ensure quantity doesn't go below 1
-            cart.decrementQuantity(data.id);
             setQuantity((prev) => prev - 1); // Update local state immediately
         }
     };
@@ -74,15 +71,15 @@ const Info: React.FC<InfoProps> = ({ data }) => {
                         style={{ backgroundColor: data?.color?.value }}
                     />
                 </div>
-                <div className="mt-40 flex flex-row items-center gap-x-3">
+                <div className="mt-48 flex flex-row items-center gap-x-3">
                     <label className="font-semibold text-black mr-4">Qty:</label>
                     <IconButton onClick={incrementQuantity} icon={<PlusIcon size={15} />} />
                     <input
                         type="text"
                         value={quantity}
-                        readOnly
                         className="text-center font-semibold text-md border border-gray-300 rounded-md"
                         size={5}
+                        readOnly
                     />
                     <IconButton onClick={decrementQuantity} icon={<MinusIcon size={15} />} />
                     <Buttons onClick={onAddToCart} className="flex items-center gap-x-2 ml-4">

@@ -51,7 +51,7 @@ const CartItems: React.FC<CartItemsProps> = ({ data }) => {
         </div>
         <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
           <div className="flex justify-between">
-            <p className="text-lg font-semibold text-black">{data.name}</p>
+            <p className="text-lg font-bold text-black mb-1">{data.name}</p>
           </div>
           <div className="mt-1 flex text-sm">
             <p className="text-gray-500">{data.color.name}</p>
@@ -65,9 +65,8 @@ const CartItems: React.FC<CartItemsProps> = ({ data }) => {
             <label className="font-semibold text-black mr-4">Qty:</label>
           <IconButton onClick={incrementQuantity} icon={<PlusIcon size={15} />} />
           <input
-            type="text"
+            type="quantity"
             value={quantity}
-            readOnly
             className="text-center font-semibold text-md border border-gray-300 rounded-md"
             size={5}
           />

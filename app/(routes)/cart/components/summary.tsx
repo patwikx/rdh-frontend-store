@@ -122,9 +122,9 @@ const Summary = () => {
             </div>
             <div className="mt-2 space-y-4">
                 <label className="block">
-                    <span className="text-gray-700">Company Name</span>
+                    <span className="text-gray-700 font-semibold text-md">Company Name</span>
                     <input
-                        type="text"
+                        type="name"
                         placeholder="Company Name"
                         value={companyName}
                         onChange={(e) => setCompanyName(e.target.value)}
@@ -133,7 +133,7 @@ const Summary = () => {
                     />
                 </label>
                 <label className="block">
-                    <span className="text-gray-700">PO #</span>
+                    <span className="text-gray-700 font-semibold text-md">PO #</span>
                     <input
                         type="text"
                         placeholder="PO #"
@@ -144,9 +144,9 @@ const Summary = () => {
                     />
                 </label>
                 <label className="block">
-                    <span className="text-gray-700">Address</span>
+                    <span className="text-gray-700 font-semibold text-md">Address</span>
                     <input
-                        type="text"
+                        type="address"
                         placeholder="Address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
@@ -155,7 +155,7 @@ const Summary = () => {
                     />
                 </label>
                 <label className="block">
-                    <span className="text-gray-700">Contact Number</span>
+                    <span className="text-gray-700 font-semibold text-md">Contact Number</span>
                     <input
                         type="text"
                         placeholder="Contact Number"
