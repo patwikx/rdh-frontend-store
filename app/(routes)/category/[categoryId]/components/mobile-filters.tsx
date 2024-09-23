@@ -7,7 +7,8 @@ import { Dialog, DialogPanel } from "@headlessui/react";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import Filter from "./filter";
-import Buttons from "@/components/Buttonx";
+import { Button } from "@/components/ui/button";
+
 
 interface MobileFiltersProps {
     sizes: Size[];
@@ -25,10 +26,10 @@ const MobileFilters: React.FC<MobileFiltersProps> = ({
 
   return (
     <>
-    <Buttons className="flex items-center gap-x-2 lg:hidden">
+    <Button className="flex items-center gap-x-2 lg:hidden">
         Filters
         <Plus size={20}/>
-    </Buttons>
+    </Button>
 
     <Dialog open={open} as="div" className="relative z-40 lg:hidden" onClose={onClose}>
     <div className="fixed inset-0 bg-black bg-opacity-25" />

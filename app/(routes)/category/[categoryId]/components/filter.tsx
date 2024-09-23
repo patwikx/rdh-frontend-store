@@ -1,7 +1,8 @@
 "use client"
 
 
-import Buttons from "@/components/Buttonx";
+
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Color, Size } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -52,7 +53,7 @@ const Filter: React.FC<FilterProps> = ({
             <div className="flex flex-wrap gap-2">
             {data.map((filter) => (
                 <div key={filter.id} className="flex items-center">
-                    <Buttons 
+                    <Button 
                     className={cn(
                         "rounded-md text-sm text-gray-800 p-2 bg-white border border-gray-300",
                         selectedValue === filter.id && "bg-black text-white"
@@ -60,7 +61,7 @@ const Filter: React.FC<FilterProps> = ({
                     onClick={() => onClick(filter.id)}
                     >
                         {filter.name}
-                    </Buttons>
+                    </Button>
                 </div>
             ))}
             </div>
