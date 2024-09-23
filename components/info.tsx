@@ -4,13 +4,13 @@ import { useEffect, useState } from "react";
 import { MinusIcon, PlusIcon, ShoppingCart } from "lucide-react";
 import IconButton from "./ui/icon-button";
 import Currency from "./ui/currency";
-import Buttons from "./Buttonx";
 import useCart from "@/hooks/use-cart";
 import { Product } from "@/types";
 import { MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
 import { Label } from "./ui/label";
 import { CardDescription } from "./ui/card";
+import { Button } from "./ui/button";
 
 interface InfoProps {
     data: Product;
@@ -90,10 +90,10 @@ const Info: React.FC<InfoProps> = ({ data }) => {
                         readOnly
                     />
                     <IconButton onClick={incrementQuantity} icon={<PlusIcon size={15} />} />
-                    <Buttons onClick={onAddToCart} className="flex items-center gap-x-2 ml-4">
+                    <Button onClick={onAddToCart} className="flex items-center gap-x-2 ml-4">
                         Add to Cart
                         <ShoppingCart />
-                    </Buttons>
+                    </Button>
                 </div>
             </div>
         </div>
