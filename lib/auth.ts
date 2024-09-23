@@ -16,11 +16,6 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-  callbacks: {
-    async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-      return baseUrl; // Redirect to the home page after sign in
-    },
-  },
 };
 
 const handler = NextAuth(authOptions);
