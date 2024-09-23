@@ -3,7 +3,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import { Loader } from "@/components/ui/loader";
@@ -13,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { HandCoins, HandHelping, Handshake, Truck } from "lucide-react";
+import { HandCoins, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { useCurrentUser } from "@/hooks/use-current-user";
 
