@@ -1,12 +1,13 @@
 "use client"
 
-import Buttons from "@/components/ui/Button";
+
 import IconButton from "@/components/ui/icon-button";
 import { Color, Size } from "@/types";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
 import Filter from "./filter";
+import Buttons from "@/components/Buttonx";
 
 interface MobileFiltersProps {
     sizes: Size[];

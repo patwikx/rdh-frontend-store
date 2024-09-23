@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { MinusIcon, PlusIcon, ShoppingCart } from "lucide-react";
 import IconButton from "./ui/icon-button";
 import Currency from "./ui/currency";
-import Buttons from "./ui/Button";
+import Buttons from "./Buttonx";
 import useCart from "@/hooks/use-cart";
 import { Product } from "@/types";
 import { MouseEventHandler } from "react";
 import { useRouter } from "next/navigation";
+import { Label } from "./ui/label";
+import { CardDescription } from "./ui/card";
 
 interface InfoProps {
     data: Product;
@@ -66,19 +68,20 @@ const Info: React.FC<InfoProps> = ({ data }) => {
                     <div>{data?.size?.name}</div>
                 </div>
                 <div className="flex items-center gap-x-4">
-                    <h3 className="font-semibold text-black">Color:</h3>
+                    <h3 className="font-semibold ">Color:</h3>
                     <div
                         className="h-6 w-6 rounded-full border border-gray-600"
                         style={{ backgroundColor: data?.color?.value }}
                     />
                 </div>
                     <div className="mt-3">
-                    <span className="font-semibold text-gray-500">Item Description</span>
-                    <li className="mt-2">{data?.itemDesc}</li>
+                    <Label className="font-bold text-xs">Item Description</Label>
+                    <CardDescription className="mt-1">{data?.itemDesc}</CardDescription>
                     </div>
                 <div className="mt-12 flex flex-row items-center gap-x-3">
                     <label className="font-semibold text-black mr-4">Qty:</label>
-                    <IconButton onClick={incrementQuantity} icon={<PlusIcon size={15} />} />
+                    
+                    <IconButton onClick={decrementQuantity} icon={<MinusIcon size={15} />} />
                     <input
                         type="text"
                         value={quantity}
@@ -86,7 +89,7 @@ const Info: React.FC<InfoProps> = ({ data }) => {
                         size={5}
                         readOnly
                     />
-                    <IconButton onClick={decrementQuantity} icon={<MinusIcon size={15} />} />
+                    <IconButton onClick={incrementQuantity} icon={<PlusIcon size={15} />} />
                     <Buttons onClick={onAddToCart} className="flex items-center gap-x-2 ml-4">
                         Add to Cart
                         <ShoppingCart />

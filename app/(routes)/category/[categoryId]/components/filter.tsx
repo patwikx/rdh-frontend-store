@@ -1,6 +1,7 @@
 "use client"
 
-import Buttons from "@/components/ui/Button";
+
+import Buttons from "@/components/Buttonx";
 import { cn } from "@/lib/utils";
 import { Color, Size } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
