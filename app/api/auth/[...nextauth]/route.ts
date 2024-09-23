@@ -1,7 +1,21 @@
-import { authOptions } from "@/lib/auth";
-import NextAuth from "next-auth/next";
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
 
+const handler = NextAuth({
+    session: {
+      strategy: "jwt",
+    },
+    providers: [
+      GoogleProvider({
+        clientId: process.env.GOOGLE_CLIENT_ID as string,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      }),
+    ],
+    callbacks: {
+      async redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
+        return baseUrl; // Redirect to the home page after sign in
+      },
+    },
+  });
 
-const handler = NextAuth(authOptions)
-
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
