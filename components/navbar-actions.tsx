@@ -13,6 +13,7 @@ import { Label } from "./ui/label";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { Avatar, AvatarImage } from "@/components/ui/avatar"; // Adjust the import based on your structure
 import Headerx from "./header";
+import Currency from "./ui/currency";
 
 interface HoverItemsProps {
     data?: Product;
@@ -68,10 +69,10 @@ const NavbarActions: React.FC<HoverItemsProps> = ({ data }) => {
                     </div>
                     <div className="flex mt-4 justify-between">
                         <div>
-                            <Label className="font-bold">Total</Label>
+                            <Label className="font-bold text-lg">Total</Label>
                         </div>
-                        <div className="text-right mr-4">
-                            <Label className="font-bold">{totalPrice}.00</Label>
+                        <div className="text-right mr-4 mt-2 font-bold">
+                            <Label className="font-bold text-lg"><Currency value={totalPrice} /></Label>
                         </div>
                     </div>
                     <Separator className="mt-2" />

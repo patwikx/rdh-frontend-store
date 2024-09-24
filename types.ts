@@ -38,3 +38,21 @@ export interface Color {
     name: string;
     value: string;
 }
+
+export interface Order {
+    id: string;
+    storeId: string;
+    isPaid: string;
+    companyName: string;
+    poNumber: string;
+    contactNumber: string;
+    address: string;
+    createdAt: string;
+}
+export interface OrderItem {
+    id: string;
+    orderId: string;
+    order: Order;
+    productid: string;
+    product: Product;
+}

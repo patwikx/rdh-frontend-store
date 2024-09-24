@@ -46,15 +46,11 @@ export function Headerx () {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Profile
-            <DropdownMenuShortcut><User size={20} className='mr-2' /></DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/my-orders")}>
             My Orders 
             <DropdownMenuShortcut><Package size={20} className='mr-2' /></DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={() => router.push("/settings")}>
             Settings
             <DropdownMenuShortcut><Settings size={20} className='mr-2' /></DropdownMenuShortcut>
           </DropdownMenuItem>
