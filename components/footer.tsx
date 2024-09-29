@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="border-t">
         <div className="flex items-center justify-center mx-auto py-6">
-        <p className="text-center text-xs mt-[-4px]">
+        <div className="text-center text-xs mt-[-4px]">
            &copy; 2024 RD Hardware & Fishing Supply, Inc. All rights reserved.
            <div className="mt-2">
            <Link
@@ -24,7 +24,7 @@ const Footer = () => {
               </Link>
            </div>
 
-        </p>
+        </div>
 
         </div>
     </footer>

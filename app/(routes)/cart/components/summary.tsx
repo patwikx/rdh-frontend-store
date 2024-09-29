@@ -22,6 +22,7 @@ const Summary = () => {
     const items = useCart((state) => state.items);
     const removeAll = useCart((state) => state.removeAll);
     const session = useCurrentUser();
+    
 
     const [loading, setLoading] = useState(false);
 
@@ -51,7 +52,7 @@ const Summary = () => {
 
     const onCheckout = async () => {
         // Check if the user is logged in
-        if (!session) {
+        if (!session || !session.email) {
             toast.error("You must log in first before proceeding.");
             return; // Stop further execution
         }
@@ -94,6 +95,70 @@ const Summary = () => {
     
             if (response.status === 201) {
                 toast.success("Order created successfully! Redirecting...");
+    
+                // Send an email with the order summary
+                await axios.post("/api/send-email", {
+                    to: session.email,
+                    name: session.name, // Assuming the session contains the user's name
+                    subject: "Order Confirmation",
+                    body: `<div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd;">
+  <h2 style="color: #333;">Thank you for your order, ${session.name}!</h2>
+  <p style="color: #555;">We’ve received your order and it’s now being processed. Below is your order confirmation:</p>
+
+  <h3 style="color: #333; margin-top: 30px;">Order Details</h3>
+  <p style="color: #555;">PO #: <strong>${poNumber}</strong></p>
+  <p style="color: #555;">Delivery Address: <strong>${address}</strong></p>
+  <p style="color: #555;">Contact Number: <strong>${contactNumber}</strong></p>
+
+  <h3 style="color: #333; margin-top: 30px;">Order Summary</h3>
+
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <thead>
+      <tr>
+        <th style="text-align: left; padding: 10px; border-bottom: 2px solid #eee;">Product</th>
+        <th style="text-align: center; padding: 10px; border-bottom: 2px solid #eee;">Quantity</th>
+        <th style="text-align: center; padding: 10px; border-bottom: 2px solid #eee;">Price</th>
+        <th style="text-align: center; padding: 10px; border-bottom: 2px solid #eee;">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${items.map(
+        (item) => `
+        <tr>
+          <td style="padding: 10px; border-bottom: 1px solid #eee;">
+            <img src="${item.images[0].url}" alt="${item.name}" style="width: 50px; height: 50px; margin-right: 10px; vertical-align: middle; border: 1px solid #ddd;">
+            <span>${item.name}</span>
+          </td>
+          <td style="text-align: center; padding: 10px; border-bottom: 1px solid #eee;">${item.quantity}</td>
+          <td style="text-align: center; padding: 10px; border-bottom: 1px solid #eee;">₱ ${Number(item.price).toFixed(2)}</td>
+          <td style="text-align: center; padding: 10px; border-bottom: 1px solid #eee;">₱ ${(Number(item.price) * item.quantity).toFixed(2)}</td>
+        </tr>
+      `
+      ).join('')}
+    </tbody>
+  </table>
+
+  <p style="font-size: 18px; color: #333; text-align: right; margin-top: 20px;">Total: <strong>₱ ${totalPrice.toFixed(2)}</strong></p>
+
+  <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+
+  <p style="color: #555;">If you have any questions about your order, feel free to <a href="mailto:support@example.com" style="color: #0066cc; text-decoration: none;">contact our support team</a>.</p>
+
+  <p style="color: #555;">Thank you for shopping with us!</p>
+
+  <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+
+  <p style="color: #555;">Stay connected with us:</p>
+  <p style="color: #555;">
+    <strong>Facebook:</strong> <a href="https://www.facebook.com/rdhfsi" style="color: #0066cc; text-decoration: none;">www.facebook.com/rdhfsi</a><br>
+    <strong>Contact Number:</strong> 0912-394-5678<br>
+    <strong>Branch Address:</strong> Santiago Boulevard, General Santos City, Philippines, 9500
+  </p>
+</div>
+
+`
+                });
+    
                 removeAll();
                 setTimeout(() => {
                     window.location.href = response.data.redirectUrl || "/";
@@ -108,6 +173,7 @@ const Summary = () => {
             setLoading(false); // Stop loading animation
         }
     };
+    
 
     return (
         <div className="mt-16 rounded-lg border border-gray-200 bg-white shadow-sm px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
