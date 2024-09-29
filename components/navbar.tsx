@@ -13,12 +13,23 @@ const Navbar = async () => {
   return (
     <div className="border-b">
       <Container>
-        <div className="relative px-4 sm:px-6 lg:px-8 flex h-16 items-center">
-          <Link href="/" className="ml-4 flex lg:ml-0 gap-x-2">
-            <Image src="/RDH.webp" alt="RDHFSI Store Logo" width={35} height={25} />
+        <div className="relative flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+          <Link href="/" className="ml-4 flex lg:ml-0 gap-x-2 items-center">
+            <Image
+              src="/RDH.webp"
+              alt="RDHFSI Store Logo"
+              width={35}
+              height={25}
+              className="h-auto w-10 sm:w-12" // Adjust width for mobile and larger screens
+            />
             <p className="font-bold text-xl">RDHFSI Store</p>
           </Link>
-          <MainNav data={categories} />
+          <div className="hidden md:flex">
+            <MainNav data={categories} />
+          </div>
+          <div className="flex md:hidden">
+{/** */}
+          </div>
           <NavbarActions />
         </div>
       </Container>

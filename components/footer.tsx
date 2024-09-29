@@ -13,7 +13,7 @@ const Footer = () => {
                 className="underline underline-offset-4 hover:text-primary"
               >
                 Terms of Service
-              </Link>{" "}
+              </Link>{''}
            </div>
            <div className="mt-2 mb-[-12px]">
            <Link

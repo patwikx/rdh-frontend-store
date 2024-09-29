@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import Headerx from "./header";
 import Image from "next/image";
 import { Product } from "@/types";
+import { ModeToggle } from "./mode-toggle";
 
 interface HoverItemsProps {
     data?: Product;

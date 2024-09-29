@@ -7,6 +7,7 @@ import ModalProvider from "@/providers/modal-provider";
 import ToastProvider from "@/providers/toast-provider";
 import { Toaster } from "sonner";
 import SessionWrapper from "@/components/session-provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const font = Urbanist({ subsets: ["latin"] });
 
@@ -24,6 +25,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={font.className}>
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
     <SessionWrapper>
           <ModalProvider />
           <ToastProvider />
@@ -32,6 +39,7 @@ export default function RootLayout({
           <Toaster />
           <Footer />
           </SessionWrapper>
+          </ThemeProvider>
       </body>
     </html>
   );
