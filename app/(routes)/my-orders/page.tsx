@@ -47,7 +47,7 @@ import { Loader } from "@/components/ui/loader";
 import { ErrorAnimation } from "@/components/ui/error";
 
 // Define your columns based on your Order structure
-export const columns: ColumnDef<Order>[] = [
+const columns: ColumnDef<Order>[] = [
   {
     accessorKey: "poNumber",
     header: "PO #",
