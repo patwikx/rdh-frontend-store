@@ -48,6 +48,7 @@ export interface Order {
     contactNumber: string;
     address: string;
     createdAt: string;
+    orderItems: OrderItem[];
 }
 export interface OrderItem {
     id: string;
@@ -55,4 +56,6 @@ export interface OrderItem {
     order: Order;
     productid: string;
     product: Product;
+    quantity: string;
+    totalItemAmount: number;
 }

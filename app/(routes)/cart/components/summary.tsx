@@ -91,6 +91,8 @@ const Summary = () => {
                 poNumber: deliveryMethod === "delivery" ? poNumber : "",
                 address: deliveryMethod === "delivery" ? address : "",
                 contactNumber: deliveryMethod === "delivery" ? contactNumber : "",
+                clientName: session.name,
+                clientEmail: session.email
             });
     
             if (response.status === 201) {
