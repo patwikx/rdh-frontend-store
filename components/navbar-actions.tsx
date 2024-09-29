@@ -14,6 +14,7 @@ import Headerx from "./header";
 import Image from "next/image";
 import { Product } from "@/types";
 import { ModeToggle } from "./mode-toggle";
+import { Card, CardContent } from "./ui/card";
 
 interface HoverItemsProps {
     data?: Product;
@@ -56,6 +57,8 @@ const NavbarActions: React.FC<HoverItemsProps> = ({ data }) => {
                     </Button>
                 </SheetTrigger>
                 <SheetContent className="w-80 p-4">
+
+                 
                     <div className="flex items-center justify-center mt-8">
                         <Image src='/RDH.webp' width={100} height={100} alt="RDH Image"/>
                         <Label className="flex items-center justify-center font-bold text-xl">
@@ -67,6 +70,8 @@ const NavbarActions: React.FC<HoverItemsProps> = ({ data }) => {
                         <ShoppingBag size={20} />
                     </div>
                     <Separator className="mt-2" />
+                    <Card className="mt-4">
+                    <CardContent>
 
                     {cart.items.length === 0 ? (
                         <p className="text-neutral-500 mt-4">Your cart is empty.</p>
@@ -95,15 +100,19 @@ const NavbarActions: React.FC<HoverItemsProps> = ({ data }) => {
                             <div className="flex justify-between items-center">
                                 <Label className="font-bold text-lg">Total</Label>
                                 <div className="text-right font-bold text-lg">
-                                    <Currency value={totalPrice} />
+                                <Label className="text-lg font-bold">₱ 
+  {totalPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+</Label>
                                 </div>
                             </div>
 
-                            <Button onClick={handleCheckout} className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2">
+                            <Button onClick={handleCheckout} className="w-full mt-4">
                                 Proceed to Checkout
                             </Button>
                         </div>
                     )}
+                        </CardContent>
+                       </Card>
                 </SheetContent>
             </Sheet>
 

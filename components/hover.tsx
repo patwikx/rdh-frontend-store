@@ -23,6 +23,7 @@ const HoverItems: React.FC<CartItemsProps> = ({ data }) => {
   return (
     <div>
       <Container>
+        
         {/* Flex container to align avatar, name, and price */}
         <div className="flex items-center gap-4 space-y-4">
           {/* Product Image */}

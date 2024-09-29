@@ -25,12 +25,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body className={font.className}>
-      <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+
     <SessionWrapper>
           <ModalProvider />
           <ToastProvider />
@@ -39,7 +34,6 @@ export default function RootLayout({
           <Toaster />
           <Footer />
           </SessionWrapper>
-          </ThemeProvider>
       </body>
     </html>
   );
