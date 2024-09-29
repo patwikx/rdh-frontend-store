@@ -193,7 +193,7 @@ export default function DataTableDemo() {
   return (
     <div>
         <CardTitle className="mt-4 ml-4 font-bold text-3xl">My Orders ({orders.length})</CardTitle>
-        <Card className="mt-4">
+        <Card className="mt-4 ml-4 mr-4 mb-4">
             <CardContent>
       {loading ? ( // Show loading state
         <div className="flex justify-center items-center py-4">

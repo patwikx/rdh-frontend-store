@@ -4,11 +4,13 @@ import MainNav from "./main-nav";
 import getCategories from "@/actions/get-categories";
 import NavbarActions from "./navbar-actions";
 import Image from "next/image";
+import getProducts from "@/actions/get-products";
 
 export const revalidate = 0;
 
 const Navbar = async () => {
   const categories = await getCategories();
+  const products = await getProducts({ isFeatured: true }); 
 
   return (
     <div className="border-b">
@@ -25,7 +27,7 @@ const Navbar = async () => {
             <p className="font-bold text-xl">RDHFSI Store</p>
           </Link>
           <div className="hidden md:flex">
-            <MainNav data={categories} />
+            <MainNav data={categories} products={products} />
           </div>
           <div className="flex md:hidden">
 {/** */}
