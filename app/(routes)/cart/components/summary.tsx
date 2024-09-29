@@ -157,7 +157,6 @@ const Summary = () => {
     <strong>Branch Address:</strong> Santiago Boulevard, General Santos City, Philippines, 9500
   </p>
 </div>
-
 `
                 });
     
@@ -175,6 +174,15 @@ const Summary = () => {
             setLoading(false); // Stop loading animation
         }
     };
+
+    {/* Function to handle the image upload */}
+const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+        const file = event.target.files[0];
+        // Process the uploaded file here (e.g., store it in state or upload it)
+        console.log(file);
+    }
+};
     
 
     return (
@@ -217,62 +225,100 @@ const Summary = () => {
         </RadioGroup>
     </div>
 
-    {/* Conditionally render delivery information based on selected method */}
-    {deliveryMethod === "delivery" && (
-        <>
-            <div className="mt-6">
-                <label className="mt-6 font-bold text-xl">
-                    Delivery Information
-                </label>
-            </div>
-            <div className="mt-2 space-y-4">
-                <label className="block">
-                    <span className="font-semibold text-md">Company Name</span>
-                    <Input
-                        type="name"
-                        placeholder="Company Name"
-                        value={companyName}
-                        onChange={(e) => setCompanyName(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        required
-                    />
-                </label>
-                <label className="block">
-                    <span className="font-semibold text-md">PO #</span>
-                    <Input
-                        type="text"
-                        placeholder="PO #"
-                        value={poNumber}
-                        onChange={(e) => setPoNumber(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        required
-                    />
-                </label>
-                <label className="block">
-                    <span className="font-semibold text-md">Address</span>
-                    <Input
-                        type="address"
-                        placeholder="Address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        required
-                    />
-                </label>
-                <label className="block">
-                    <span className="font-semibold text-md">Contact Number</span>
-                    <Input
-                        type="text"
-                        placeholder="Contact Number"
-                        value={contactNumber}
-                        onChange={(e) => setContactNumber(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        required
-                    />
-                </label>
-            </div>
-        </>
-    )}
+    {/* Conditionally render delivery information or image upload based on selected method */}
+{deliveryMethod === "delivery" && (
+    <>
+        <div className="mt-6">
+            <label className="mt-6 font-bold text-xl">
+                Delivery Information
+            </label>
+        </div>
+        <div className="mt-2 space-y-4">
+            <label className="block">
+                <span className="font-semibold text-md">Company Name</span>
+                <Input
+                    type="name"
+                    placeholder="Company Name"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    required
+                />
+            </label>
+            <label className="block">
+                <span className="font-semibold text-md">PO #</span>
+                <Input
+                    type="text"
+                    placeholder="PO #"
+                    value={poNumber}
+                    onChange={(e) => setPoNumber(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    required
+                />
+            </label>
+            <label className="block">
+                <span className="font-semibold text-md">Address</span>
+                <Input
+                    type="address"
+                    placeholder="Address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    required
+                />
+            </label>
+            <label className="block">
+                <span className="font-semibold text-md">Contact Number</span>
+                <Input
+                    type="text"
+                    placeholder="Contact Number"
+                    value={contactNumber}
+                    onChange={(e) => setContactNumber(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                    required
+                />
+            </label>
+        </div>
+    </>
+)}
+
+{deliveryMethod === "pick-up" && (
+    <>
+<div className="mt-2 flex items-center justify-center">
+    <label className="block text-center">
+        <div className="flex flex-col items-center mt-4">
+    <label className="flex flex-col items-center p-4 border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:border-gray-600 transition duration-300">
+        <span className="text-center font-bold text-md mb-2 text-gray-600">Attach Approved P.O</span>
+        <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleImageUpload(e)}
+            className="hidden" // Hide the default input
+            required
+        />
+        <div className="flex flex-col items-center">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-12 h-12 text-gray-400 mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                />
+            </svg>
+            <span className="text-gray-500">Drag & Drop or Click to Upload</span>
+        </div>
+    </label>
+</div>
+    </label>
+</div>
+    </>
+)}
 
     {loading ? (
         <div className="flex items-center justify-center mt-6">
@@ -281,7 +327,7 @@ const Summary = () => {
     ) : (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button className="w-full mt-6">Checkout</Button>
+                <Button className="w-full mt-6">Place order.</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
