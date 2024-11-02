@@ -102,12 +102,6 @@ const Billboards: React.FC<BillboardProps> = ({ data }) => {
             </Button>
           ))}
         </div>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2">
-          <ChevronLeft className="h-6 w-6" />
-        </CarouselPrevious>
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2">
-          <ChevronRight className="h-6 w-6" />
-        </CarouselNext>
       </Carousel>
     </div>
   )
