@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import axios from "axios"
-import { HandCoins, Truck } from "lucide-react"
+import { CalendarIcon, HandCoins, Truck } from "lucide-react"
 import { toast } from "sonner"
 
 import Currency from "@/components/ui/currency"
@@ -14,10 +14,17 @@ import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
-
+import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import useCart from "@/hooks/use-cart"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { UploadButton } from "@/utils/uploadthing"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns"
+import { DatePicker } from "@/components/ui/datepicker"
+
 
 type UploadThingFile = {
   url: string
@@ -39,6 +46,13 @@ const Summary = () => {
   const [uploadedFileUrls, setUploadedFileUrls] = useState<string[]>([])
   const [uploadedFileNames, setUploadedFileNames] = useState<string[]>([])
   const [attachedPOUrl, setApprovedPOUrl] = useState("")
+
+  const SHIPPING_RATES = {
+    "Metro Manila": 150,
+    "Luzon": 200,
+    "Visayas": 250,
+    "Mindanao": 300
+  }
 
   useEffect(() => {
     if (searchParams.get("success")) {
@@ -199,6 +213,11 @@ const Summary = () => {
     }
   }
 
+  const [selectedDate, setSelectedDate] = useState<Date>()
+  const [region, setRegion] = useState<keyof typeof SHIPPING_RATES | "">("")
+  const shippingFee = region && deliveryMethod === "delivery" ? SHIPPING_RATES[region as keyof typeof SHIPPING_RATES] : 0
+  const finalTotal = totalPrice + shippingFee
+  const [orderInstructions, setOrderInstructions] = useState("")
 
     return (
         <div className="mt-16 rounded-lg border border-gray-200 bg-white shadow-sm px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
@@ -225,20 +244,73 @@ const Summary = () => {
             <div className="mt-4">
                 <Separator />
             </div>
-            <div className="mt-6">
-            <RadioGroup value={deliveryMethod} onValueChange={(value) => setDeliveryMethod(value)}>
-          <div className="flex items-center justify-center space-x-2">
-            <RadioGroupItem value="pick-up" id="r2" />
-            <Label htmlFor="r2" className="font-bold">Pick-up</Label>
-            <HandCoins size={20} />
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="delivery" id="r3" className="ml-16 border-b" />
-              <Label htmlFor="r3" className="font-bold">Delivery</Label>
-              <Truck className="ml-2" size={20} />
+            <div>
+          <h2 className="text-lg font-medium">Delivery method</h2>
+          <RadioGroup
+            value={deliveryMethod}
+            onValueChange={setDeliveryMethod}
+            className="mt-2 grid grid-cols-2 gap-4"
+          >
+            <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${deliveryMethod === "pick-up" ? "border-primary" : "border-gray-200"}`}>
+              <RadioGroupItem value="pick-up" id="pick-up" />
+              <Label htmlFor="pick-up" className="cursor-pointer">Pick-up in store</Label>
+              <HandCoins className="h-5 w-5" />
+            </div>
+            <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${deliveryMethod === "delivery" ? "border-primary" : "border-gray-200"}`}>
+              <RadioGroupItem value="delivery" id="delivery" />
+              <Label htmlFor="delivery" className="cursor-pointer">Delivery</Label>
+              <Truck className="h-5 w-5" />
+            </div>
+          </RadioGroup>
+        </div>
+
+              {/* Store Locations */}
+              {deliveryMethod === "pick-up" && (
+          <div>
+
+            {/* Pickup Date */}
+            <div className="mt-4">
+              <h2 className="text-lg font-medium">Pickup date & time</h2>
+              <Popover>
+               <PopoverTrigger asChild>
+               <Button variant="outline" className="w-full justify-start text-left font-normal mt-2">
+                {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                     <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
+                         </Button>
+                             </PopoverTrigger>
+                                 <PopoverContent className="w-auto p-0" align="start">
+                                  <Calendar
+                                    mode="single"
+                                    selected={selectedDate}
+                                    onSelect={setSelectedDate}
+                              initialFocus
+                               />
+                              </PopoverContent>
+                             </Popover>
             </div>
           </div>
-        </RadioGroup>
-      </div>
+        )}
+
+              {/* Delivery Region */}
+              {deliveryMethod === "delivery" && (
+          <div className="mt-4">
+            <h2 className="text-lg font-medium">Delivery Region</h2>
+            <div className="mt-2">
+              <Select value={region} onValueChange={(value) => setRegion(value as keyof typeof SHIPPING_RATES)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select your region" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(SHIPPING_RATES).map(([region, rate]) => (
+                    <SelectItem key={region} value={region}>
+                      {region} (₱{rate} shipping fee)
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )}
 
       <div className="mt-6">
         <label className="mt-6 font-bold text-xl">
@@ -330,7 +402,6 @@ const Summary = () => {
           </div>
         )}
       </div>
-
             {loading ? (
                 <div className="flex items-center justify-center mt-6">
                     <Loader />

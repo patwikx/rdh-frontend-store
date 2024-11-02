@@ -63,6 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, viewMode }) => {
             src={data?.images?.[0]?.url}
             alt={data.name}
             fill
+            sizes='auto'
             className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
           {discountPercentage > 0 && (

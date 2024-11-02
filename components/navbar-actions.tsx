@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { LogIn, ShoppingBag, Trash2, Plus, Minus } from "lucide-react"
@@ -10,7 +10,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 import { Product } from "@/types"
 
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetDescription } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -33,10 +33,18 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
   const [isMounted, setIsMounted] = useState(false)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const session = useCurrentUser()
+  const sheetTriggerRef = useRef<HTMLButtonElement>(null)
+  const firstFocusableElementRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
+
+  useEffect(() => {
+    if (isSheetOpen && firstFocusableElementRef.current) {
+      firstFocusableElementRef.current.focus()
+    }
+  }, [isSheetOpen])
 
   if (!isMounted) {
     return null
@@ -66,11 +74,18 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
     }
   }
 
+  const handleSheetOpenChange = (open: boolean) => {
+    setIsSheetOpen(open)
+    if (!open && sheetTriggerRef.current) {
+      sheetTriggerRef.current.focus()
+    }
+  }
+
   return (
     <div className="ml-auto flex items-center gap-x-4">
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
+      <Sheet open={isSheetOpen} onOpenChange={handleSheetOpenChange}>
         <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="relative">
+          <Button ref={sheetTriggerRef} variant="outline" size="icon" className="relative" aria-label="Open shopping cart">
             <ShoppingBag className="h-5 w-5" />
             {cart.items.length > 0 && (
               <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center">
@@ -85,11 +100,12 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
               <Image src='/RDH.webp' width={50} height={50} alt="RDH Image" className="rounded-full"/>
               <span className="font-bold text-xl">RD Hardware & Fishing Supply, Inc.</span>
             </SheetTitle>
+            <SheetDescription>Review your cart items and proceed to checkout.</SheetDescription>
           </SheetHeader>
           <Separator className="my-4" />
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Shopping Cart</h2>
-            <ShoppingBag className="h-5 w-5" />
+            <ShoppingBag className="h-5 w-5" aria-hidden="true" />
           </div>
           <ScrollArea className="h-[60vh] mt-4">
             {cart.items.length === 0 ? (
@@ -109,15 +125,30 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
                         <Currency value={Number(item.price) * item.quantity} />
                       </div>
                       <div className="flex flex-col items-center space-y-2">
-                        <Button variant="outline" size="icon" onClick={() => handleUpdateQuantity(item.id, 'increase')}>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          onClick={() => handleUpdateQuantity(item.id, 'increase')}
+                          aria-label={`Increase quantity of ${item.name}`}
+                        >
                           <Plus className="h-4 w-4" />
                         </Button>
                         <span className="text-sm font-medium">{item.quantity}</span>
-                        <Button variant="outline" size="icon" onClick={() => handleUpdateQuantity(item.id, 'decrease')}>
+                        <Button 
+                          variant="outline" 
+                          size="icon" 
+                          onClick={() => handleUpdateQuantity(item.id, 'decrease')}
+                          aria-label={`Decrease quantity of ${item.name}`}
+                        >
                           <Minus className="h-4 w-4" />
                         </Button>
                       </div>
-                      <Button variant="destructive" size="icon" onClick={() => handleRemoveItem(item.id)}>
+                      <Button 
+                        variant="destructive" 
+                        size="icon" 
+                        onClick={() => handleRemoveItem(item.id)}
+                        aria-label={`Remove ${item.name} from cart`}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </CardContent>
@@ -131,7 +162,12 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
             <div className="text-lg font-semibold">Total</div>
             <Currency value={totalPrice} />
           </CardFooter>
-          <Button onClick={handleCheckout} className="w-full mt-4" disabled={cart.items.length === 0}>
+          <Button 
+            ref={firstFocusableElementRef}
+            onClick={handleCheckout} 
+            className="w-full mt-4" 
+            disabled={cart.items.length === 0}
+          >
             Proceed to Checkout
           </Button>
         </SheetContent>

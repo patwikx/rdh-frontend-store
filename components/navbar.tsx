@@ -15,8 +15,7 @@ const Navbar = async () => {
 
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background">
-      <div className="flex h-16 items-center justify-between px-4"> {/* Main Navbar Container */}
-        
+      <div className="flex h-16 items-center justify-between px-4">
         {/* Logo and Brand Name (Left) */}
         <div className="flex items-center gap-x-2">
           <Link href="/" className="flex items-center gap-x-2">
