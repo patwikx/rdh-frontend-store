@@ -3,7 +3,8 @@ import getBillboard from "@/actions/get-billboard"
 import getProducts from "@/actions/get-products"
 import Billboards from "@/components/billboard"
 import ProductList from "@/components/product-list"
-import CustomerFeedback from '@/components/customer-feedback'
+import { CustomerFeedback } from '@/components/customer-feedback'
+
 
 
 interface HomePageProps {
