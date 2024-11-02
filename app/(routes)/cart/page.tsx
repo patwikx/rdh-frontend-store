@@ -1,51 +1,66 @@
 "use client";
 
-import Container from "@/components/ui/container";
 import useCart from "@/hooks/use-cart";
 import CartItems from "./components/cart-items";
 import Summary from "./components/summary";
-import { ScrollArea } from "@/components/ui/scroll-area"; // Import the ScrollArea component
+import { ScrollArea } from "@/components/ui/scroll-area";
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-const CartPage = () => {
+const CheckoutPage = () => {
   const cart = useCart();
+  const router = useRouter();
 
   return (
-    <div>
-      <Container>
-        <div className="px-4 py-8 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold sm:text-3xl">
-            My Cart ({cart.items.length})
-          </h1>
-          <div className="mt-4 grid grid-cols-1 lg:grid-cols-12 lg:items-start gap-x-12">
-            <div className="lg:col-span-7">
-              {cart.items.length === 0 && (
-                <p className="text-neutral-500">No items added to cart.</p>
-              )}
-              <ScrollArea className="h-[30rem] sm:h-[44rem] rounded-md border">
-                <div className="p-2 sm:p-4 flex flex-col items-center"> {/* Center items for mobile */}
-                  <ul className="space-y-2 sm:space-y-4 w-full"> {/* Full width with space between items */}
+    <div className="min-h-screen bg-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
+          <Button onClick={() => router.push("/")} variant="outline" className="flex items-center text-sm">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Continue Shopping
+          </Button>
+        </div>
+        
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start xl:gap-x-16">
+          <div className="lg:col-span-7">
+            <div className="bg-white shadow-sm rounded-lg mb-8">
+              <div className="px-4 py-6 sm:px-6">
+                <h2 className="text-lg font-medium text-gray-900">
+                  Order Summary ({cart.items.length} {cart.items.length === 1 ? 'item' : 'items'})
+                </h2>
+              </div>
+              {cart.items.length === 0 ? (
+                <div className="px-4 py-6 sm:px-6 text-center">
+                  <ShoppingBag className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">Your cart is empty</h3>
+                  <p className="mt-1 text-sm text-gray-500">Add some items to your cart to checkout.</p>
+                </div>
+              ) : (
+                <ScrollArea className="h-[30rem] sm:h-[40rem]">
+                  <ul className="divide-y divide-gray-200">
                     {cart.items.map((item) => (
-                      <React.Fragment key={item.id}>
+                      <li key={item.id} className="px-4 py-6 sm:px-6">
                         <CartItems data={item} />
-                      </React.Fragment>
+                      </li>
                     ))}
                   </ul>
-                </div>
-              </ScrollArea>
+                </ScrollArea>
+              )}
             </div>
-            <div className="lg:col-span-5 mt-6 lg:mt-0">
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="bg-white shadow-sm rounded-lg sticky top-8">
               <Summary />
             </div>
           </div>
         </div>
-
-        <div>
-          {/* Any additional content can go here */}
-        </div>
-      </Container>
+      </div>
     </div>
   );
 };
 
-export default CartPage;
+export default CheckoutPage;

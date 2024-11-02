@@ -1,29 +1,170 @@
-import { Product } from "@/types";
-import NoResults from "./ui/no-results";
-import ProductCard from "./ui/product-card";
+"use client"
+
+import { useState, useEffect } from "react"
+import { Product } from "@/types"
+import { ChevronLeft, ChevronRight, Grid, List } from "lucide-react"
+
+import NoResults from "@/components/ui/no-results"
+import ProductCard from "@/components/ui/product-card"
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Toggle } from "@/components/ui/toggle"
 
 interface ProductListProps {
-  title: string;
-  items: Product[];
+  title: string
+  items: Product[]
 }
 
-const ProductList: React.FC<ProductListProps> = ({
-  title,
-  items
-}) => {
-  return (
-    <div className="space-y-4">
-      <h3 className="font-bold text-3xl">{title}</h3>
-      {items.length === 0 && <NoResults />}
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-5 gap-4">
-        {items.map((item) => (
-          <div key={item.id}>
-            <ProductCard key={item.id} data={item} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
+  const [sortBy, setSortBy] = useState("featured")
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage, setItemsPerPage] = useState(10)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [isLoading, setIsLoading] = useState(true)
 
-export default ProductList;
+  useEffect(() => {
+    // Simulate loading delay
+    const timer = setTimeout(() => setIsLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const sortedItems = [...items].sort((a, b) => {
+    if (sortBy === "priceLowToHigh") return Number(a.price) - Number(b.price)
+    if (sortBy === "priceHighToLow") return Number(b.price) - Number(a.price)
+    if (sortBy === "newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    return 0 // Default (featured) sorting
+  })
+
+  const totalPages = Math.ceil(sortedItems.length / itemsPerPage)
+  const paginatedItems = sortedItems.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  const handleItemsPerPageChange = (value: string) => {
+    setItemsPerPage(Number(value))
+    setCurrentPage(1)
+  }
+
+  if (isLoading) {
+    return <ProductListSkeleton />
+  }
+
+  return (
+    <Card className="w-full">
+      <CardHeader className="flex flex-col sm:flex-row justify-between items-center">
+        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+        <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="featured">Featured</SelectItem>
+              <SelectItem value="priceLowToHigh">Price: Low to High</SelectItem>
+              <SelectItem value="priceHighToLow">Price: High to Low</SelectItem>
+              <SelectItem value="newest">Newest Arrivals</SelectItem>
+            </SelectContent>
+          </Select>
+          <Toggle
+            aria-label="Toggle view"
+            pressed={viewMode === "list"}
+            onPressedChange={() => setViewMode(viewMode === "grid" ? "list" : "grid")}
+          >
+            {viewMode === "grid" ? <Grid className="h-4 w-4" /> : <List className="h-4 w-4" />}
+          </Toggle>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {items.length === 0 ? (
+          <NoResults />
+        ) : (
+          <>
+            <div className={`grid gap-4 ${
+              viewMode === "grid" 
+                ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" 
+                : "grid-cols-1"
+            }`}>
+              {paginatedItems.map((item) => (
+                <ProductCard key={item.id} data={item} viewMode={viewMode} />
+              ))}
+            </div>
+            <div className="flex flex-col sm:flex-row justify-between items-center mt-8 space-y-2 sm:space-y-0">
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeft className="h-4 w-4 mr-2" />
+                  Previous
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  Page {currentPage} of {totalPages}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+              <Select value={itemsPerPage.toString()} onValueChange={handleItemsPerPageChange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Items per page" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="10">10 per page</SelectItem>
+                  <SelectItem value="20">20 per page</SelectItem>
+                  <SelectItem value="50">50 per page</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  )
+}
+
+export default ProductList
+
+// Skeleton loader for ProductList
+export const ProductListSkeleton: React.FC = () => {
+  return (
+    <Card className="w-full">
+      <CardHeader className="flex flex-col sm:flex-row justify-between items-center">
+        <Skeleton className="h-8 w-48" />
+        <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+          <Skeleton className="h-10 w-[180px]" />
+          <Skeleton className="h-10 w-10" />
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {Array(10).fill(0).map((_, index) => (
+            <div key={index} className="space-y-2">
+              <Skeleton className="h-48 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between items-center mt-8">
+          <div className="flex items-center space-x-2">
+            <Skeleton className="h-9 w-24" />
+            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-9 w-24" />
+          </div>
+          <Skeleton className="h-10 w-[180px]" />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}

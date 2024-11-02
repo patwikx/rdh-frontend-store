@@ -8,6 +8,9 @@ import ToastProvider from "@/providers/toast-provider";
 import { Toaster } from "sonner";
 import SessionWrapper from "@/components/session-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
 
 const font = Urbanist({ subsets: ["latin"] });
 
@@ -30,6 +33,9 @@ export default function RootLayout({
           <ModalProvider />
           <ToastProvider />
           <Navbar />
+          <NextSSRPlugin
+          routerConfig={extractRouterConfig(ourFileRouter)}
+        />
           {children}
           <Toaster />
           <Footer />

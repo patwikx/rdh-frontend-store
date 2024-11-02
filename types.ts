@@ -15,11 +15,15 @@ export interface Product {
     category: Category;
     itemDesc: string;
     name: string;
-    price: string;
+    price: number;
     isFeatured: boolean;
     size: Size;
     color: Color;
     images: Image[];
+    stock: number;
+  discountPercentage?: number;
+  rating?: number;
+  createdAt: Date;
 }
 
 export interface Image {
@@ -43,11 +47,13 @@ export interface Order {
     id: string;
     storeId: string;
     isPaid: string;
+    orderStatus: boolean;
     companyName: string;
     poNumber: string;
     contactNumber: string;
     address: string;
     createdAt: string;
+    deliveryMethod: string;
     orderItems: OrderItem[];
 }
 export interface OrderItem {

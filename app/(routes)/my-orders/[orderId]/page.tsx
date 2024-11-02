@@ -150,7 +150,7 @@ export default function OrderDetailsPage() {
                       currency: "PHP",
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                  }).format(parseFloat(item.product.price))}
+                  }).format(parseFloat(item.product.price.toString()))}
                 </td>
                 <td style="text-align: right;">${item.quantity}</td>
                 <td style="text-align: right;">
@@ -264,7 +264,7 @@ export default function OrderDetailsPage() {
                             currency: "PHP",
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
-                          }).format(parseFloat(item.product.price))}
+                          }).format(parseFloat(item.product.price.toString()))}
                         </TableCell>
                         <TableCell className="py-3 px-4">{item.quantity}</TableCell>
                         <TableCell className="py-3 px-4">
