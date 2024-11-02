@@ -37,7 +37,6 @@ export default function Footer() {
               <li><Link href="/returns" className="hover:text-primary">Exchanges & Returns</Link></li>
               <li><Link href="/contact" className="hover:text-primary">Contact Us</Link></li>
               <li><Link href="/gift-cards" className="hover:text-primary">Buy Gift Cards</Link></li>
-              <li><Link href="/product" className="hover:text-primary">Product Index</Link></li>
             </ul>
           </div>
 
