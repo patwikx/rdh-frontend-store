@@ -15,7 +15,7 @@ import { ourFileRouter } from "./api/uploadthing/core";
 const font = Urbanist({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "RDH Store",
+  title: "RDHFSI Store",
   description: "RD Hardware Store",
 };
 

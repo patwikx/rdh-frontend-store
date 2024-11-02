@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import Link from "next/link"
 import { Facebook, Instagram, Twitter, MapPin, Phone, Mail, Clock, Youtube, Linkedin, Rss } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -35,11 +34,10 @@ export default function Footer() {
             <h3 className="font-semibold mb-4 text-lg">CUSTOMER SERVICE</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li><Link href="/faq" className="hover:text-primary">FAQ</Link></li>
-              <li><Link href="/size-guide" className="hover:text-primary">Size Guide</Link></li>
               <li><Link href="/returns" className="hover:text-primary">Exchanges & Returns</Link></li>
               <li><Link href="/contact" className="hover:text-primary">Contact Us</Link></li>
               <li><Link href="/gift-cards" className="hover:text-primary">Buy Gift Cards</Link></li>
-              <li><Link href="/products" className="hover:text-primary">Product Index</Link></li>
+              <li><Link href="/product" className="hover:text-primary">Product Index</Link></li>
             </ul>
           </div>
 
