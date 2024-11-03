@@ -4,8 +4,7 @@ import getProducts from "@/actions/get-products"
 import Billboards from "@/components/billboard"
 import ProductList from "@/components/product-list"
 import { CustomerFeedback } from '@/components/customer-feedback'
-
-
+import ProductCarousel from './cart/components/popular-items'
 
 interface HomePageProps {
   searchParams: {
@@ -86,9 +85,21 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <Billboards data={billboard} />
         <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
           <ProductList title="Popular Products" items={filteredProducts} />
-          <ProductList title="Office Supplies" items={officeSupplies} />
-          <ProductList title="Construction Supplies" items={constructionSupplies} />
-          <ProductList title="Industrial Supplies" items={industrialSupplies} />
+          <ProductCarousel 
+            title="Office Supplies" 
+            items={officeSupplies} 
+            categoryId="dd32aa8a-5652-4e66-8875-b00eefd7a88c"
+          />
+          <ProductCarousel 
+            title="Construction Supplies" 
+            items={constructionSupplies} 
+            categoryId="1ed2e1ae-e21c-41f5-8ea9-e905afc23887"
+          />
+          <ProductCarousel 
+            title="Industrial Supplies" 
+            items={industrialSupplies} 
+            categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
+          />
           <CustomerFeedback feedbacks={mockFeedbacks} />
         </div>
       </div>

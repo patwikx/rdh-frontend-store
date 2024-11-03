@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef } from "react"
+import { useRouter } from "next/navigation"
 import { Product } from "@/types"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
@@ -13,11 +14,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 interface ProductCarouselProps {
   title: string
   items: Product[]
+  categoryId: string
 }
 
-const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, items }) => {
+const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, items, categoryId }) => {
   const [sortBy, setSortBy] = useState("featured")
   const carouselRef = useRef<HTMLDivElement>(null)
+  const router = useRouter()
 
   const sortedItems = [...items].sort((a, b) => {
     if (sortBy === "priceLowToHigh") return Number(a.price) - Number(b.price)
@@ -34,10 +37,19 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, items }) => {
     }
   }
 
+  const handleViewAll = () => {
+    router.push(`/category/${categoryId}`)
+  }
+
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row justify-between items-center">
-        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+        <div className="flex items-center space-x-4">
+          <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+          <Button variant="outline" onClick={handleViewAll}>
+            View All
+          </Button>
+        </div>
         <Select value={sortBy} onValueChange={setSortBy}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Sort by" />
