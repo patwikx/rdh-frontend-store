@@ -74,6 +74,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const constructionSupplies = await getProducts({ categoryId: "1ed2e1ae-e21c-41f5-8ea9-e905afc23887" })
   const industrialSupplies = await getProducts({ categoryId: "06a6d0a3-1fb4-482f-9e2e-cceaf965b90d" })
   const billboard = await getBillboard("1821eed5-74de-4140-94bb-c46c5f9a0753")
+  const fishingSupplies = await getProducts({ categoryId: "8ad29b1a-f91f-4fe1-80f6-f83879ee74dd" })
+  
 
   const filteredProducts = featuredProducts.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -98,6 +100,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <ProductCarousel 
             title="Industrial Supplies" 
             items={industrialSupplies} 
+            categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
+          />
+                    <ProductCarousel 
+            title="Industrial Supplies" 
+            items={fishingSupplies} 
             categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
           />
           <CustomerFeedback feedbacks={mockFeedbacks} />
