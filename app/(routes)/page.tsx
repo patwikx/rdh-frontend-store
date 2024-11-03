@@ -103,7 +103,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
           />
                     <ProductCarousel 
-            title="Industrial Supplies" 
+            title="Fishing Supplies" 
             items={fishingSupplies} 
             categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
           />
