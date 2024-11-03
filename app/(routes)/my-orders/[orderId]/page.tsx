@@ -20,6 +20,23 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Printer, TruckIcon } from "lucide-react";
 import { Label } from "@/components/ui/label";
+import { Decimal } from "@prisma/client/runtime/library";
+
+// Helper function to convert Decimal to number
+const toNumber = (value: Decimal | number): number => {
+  if (typeof value === 'number') return value;
+  return value.toNumber();
+};
+
+// Helper function for currency formatting
+const formatCurrency = (value: Decimal | number): string => {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(toNumber(value));
+};
 
 export default function OrderDetailsPage() {
   const { data: session } = useSession();
@@ -28,7 +45,6 @@ export default function OrderDetailsPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Create a ref for the card to be printed
   const printRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -52,15 +68,16 @@ export default function OrderDetailsPage() {
 
   const handlePrint = () => {
     const printContent = printRef.current;
-    if (printContent) {
+    if (printContent && orderDetails) {
         const printWindow = window.open("", "_blank");
         const printClone = printContent.cloneNode(true) as HTMLDivElement;
 
-        // Remove buttons from the cloned content
         const buttons = printClone.querySelectorAll<HTMLButtonElement>("button");
         buttons.forEach((button) => button.remove());
 
-        const totalAmount = orderDetails?.orderItems.reduce((sum, item) => sum + item.totalItemAmount, 0);
+        const subtotal = orderDetails.orderItems.reduce((sum, item) => sum + toNumber(item.totalItemAmount), 0);
+        const shippingFee = toNumber(orderDetails.shippingFee);
+        const totalAmount = subtotal + shippingFee;
 
         printWindow?.document.write(`
 <html>
@@ -123,11 +140,10 @@ export default function OrderDetailsPage() {
       <div class="invoice-header">
         <div class="invoice-title">Order Details</div>
         <div class="invoice-details">
-          <p><strong>Company Name:</strong> ${orderDetails?.companyName}</p>
-          <p><strong>PO Number:</strong> ${orderDetails?.poNumber}</p>
-    
-          <p><strong>Contact:</strong> ${orderDetails?.contactNumber}</p>
-          <p><strong>Address:</strong> ${orderDetails?.address}</p>
+          <p><strong>Company Name:</strong> ${orderDetails.companyName}</p>
+          <p><strong>PO Number:</strong> ${orderDetails.poNumber}</p>
+          <p><strong>Contact:</strong> ${orderDetails.contactNumber}</p>
+          <p><strong>Address:</strong> ${orderDetails.address}</p>
         </div>
       </div>
       <div class="table-container">
@@ -141,39 +157,26 @@ export default function OrderDetailsPage() {
             </tr>
           </thead>
           <tbody>
-            ${orderDetails?.orderItems.map(item => `
+            ${orderDetails.orderItems.map(item => `
               <tr>
                 <td>${item.product.name}</td>
                 <td style="text-align: right;">
-                  ${new Intl.NumberFormat("en-PH", {
-                      style: "currency",
-                      currency: "PHP",
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                  }).format(parseFloat(item.product.price.toString()))}
+                  ${formatCurrency(item.product.price)}
                 </td>
                 <td style="text-align: right;">${item.quantity}</td>
                 <td style="text-align: right;">
-                  ${new Intl.NumberFormat("en-PH", {
-                      style: "currency",
-                      currency: "PHP",
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                  }).format(item.totalItemAmount)}
+                  ${formatCurrency(item.totalItemAmount)}
                 </td>
               </tr>
             `).join('')}
           </tbody>
         </table>
       </div>
-<div class="total-amount">
-    Total Amount: ${new Intl.NumberFormat("en-PH", {
-      style: "currency",
-      currency: "PHP",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(totalAmount || 0)}
-  </div>
+      <div class="total-amount">
+        <p>Subtotal: ${formatCurrency(subtotal)}</p>
+        <p>Shipping Fee: ${formatCurrency(shippingFee)}</p>
+        <p>Total Amount: ${formatCurrency(totalAmount)}</p>
+      </div>
     </div>
   </body>
 </html>
@@ -183,7 +186,7 @@ export default function OrderDetailsPage() {
         printWindow?.print();
         printWindow?.close();
     }
-};
+  };
 
   if (loading) {
     return (
@@ -205,12 +208,16 @@ export default function OrderDetailsPage() {
     router.push("/my-orders");
   };
 
+  const subtotal = orderDetails.orderItems.reduce((sum, item) => sum + toNumber(item.totalItemAmount), 0);
+  const shippingFee = toNumber(orderDetails.shippingFee);
+  const totalAmount = subtotal + shippingFee;
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="flex justify-start mb-4">
         <Button className="flex items-center" onClick={handleBackClick}>
           <ArrowLeft className="mr-2" />
-          Back to previous page.
+          Back to previous page
         </Button>
       </div>
       <Card className="bg-white shadow-md rounded-lg p-4" ref={printRef}>
@@ -259,21 +266,11 @@ export default function OrderDetailsPage() {
                           {item.product.name}
                         </TableCell>
                         <TableCell className="py-3 px-4">
-                          {new Intl.NumberFormat("en-PH", {
-                            style: "currency",
-                            currency: "PHP",
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          }).format(parseFloat(item.product.price.toString()))}
+                          {formatCurrency(item.product.price)}
                         </TableCell>
                         <TableCell className="py-3 px-4">{item.quantity}</TableCell>
                         <TableCell className="py-3 px-4">
-                          {new Intl.NumberFormat("en-PH", {
-                            style: "currency",
-                            currency: "PHP",
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          }).format(item.totalItemAmount)}
+                          {formatCurrency(item.totalItemAmount)}
                         </TableCell>
                       </TableRow>
                     ))}
@@ -283,14 +280,15 @@ export default function OrderDetailsPage() {
             </Card>
           </div>
 
-          <div className="mt-6">
-            <p className="font-bold">
-              Total Amount: {new Intl.NumberFormat("en-PH", {
-                style: "currency",
-                currency: "PHP",
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              }).format(orderDetails.orderItems.reduce((sum, item) => sum + item.totalItemAmount, 0))}
+          <div className="mt-6 space-y-2">
+            <p className="font-semibold">
+              Subtotal: {formatCurrency(subtotal)}
+            </p>
+            <p className="font-semibold">
+              Shipping Fee: {formatCurrency(shippingFee)}
+            </p>
+            <p className="font-bold text-lg">
+              Total Amount: {formatCurrency(totalAmount)}
             </p>
           </div>
         </CardContent>

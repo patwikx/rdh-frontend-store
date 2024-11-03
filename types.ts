@@ -1,3 +1,5 @@
+import { Decimal } from "@prisma/client/runtime/library";
+
 export interface Billboard {
     id: string;
     label: string;
@@ -55,6 +57,7 @@ export interface Order {
     createdAt: string;
     deliveryMethod: string;
     orderItems: OrderItem[];
+    shippingFee: Decimal;
 }
 export interface OrderItem {
     id: string;

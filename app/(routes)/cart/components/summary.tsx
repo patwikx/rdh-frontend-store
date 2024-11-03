@@ -2,11 +2,12 @@
 
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { useSearchParams } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import axios from "axios"
-import { Building2, CalendarIcon, ChevronRight, FileCheck, FileText, HandCoins, MapPin, Phone, Truck } from "lucide-react"
+import { Building2, CalendarIcon, ChevronRight, FileCheck, FileText, HandCoins, MapPin, Phone, Truck, User } from "lucide-react"
 import { toast } from "sonner"
 import { format } from "date-fns"
+import { z } from "zod"
 
 import Currency from "@/components/ui/currency"
 import { Loader } from "@/components/ui/loader"
@@ -15,25 +16,40 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import useCart from "@/hooks/use-cart"
-import { useCurrentUser } from "@/hooks/use-current-user"
-import { UploadButton } from "@/utils/uploadthing"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
-
+import useCart from "@/hooks/use-cart"
+import { useCurrentUser } from "@/hooks/use-current-user"
+import { UploadButton } from "@/utils/uploadthing"
 
 type UploadThingFile = {
   url: string
   name: string
 }
 
-const SHIPPING_RATES: Record<string, number> = {
+const SHIPPING_RATES = {
   "Lagao": 150,
   "Calumpang": 200,
   "Uhaw": 250,
   "Alabel": 300
+} as const;
+
+type ShippingRegion = keyof typeof SHIPPING_RATES;
+
+const formSchema = z.object({
+  companyName: z.string().min(1, "Company Name is required"),
+  poNumber: z.string().min(1, "PO Number is required"),
+  contactNumber: z.string().min(1, "Contact Number is required"),
+  deliveryMethod: z.enum(["pick-up", "delivery"]),
+  address: z.string().optional(),
+  region: z.enum(["Lagao", "Calumpang", "Uhaw", "Alabel"]).optional(),
+  selectedDate: z.date().optional(),
+  attachedPOUrl: z.string().min(1, "Approved P.O. is required"),
+})
+
+type FormData = z.infer<typeof formSchema> & {
+  region: ShippingRegion | undefined;
 }
 
 export default function Summary() {
@@ -41,36 +57,65 @@ export default function Summary() {
   const items = useCart((state) => state.items)
   const removeAll = useCart((state) => state.removeAll)
   const session = useCurrentUser()
+  const router = useRouter();
   
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
-  const [companyName, setCompanyName] = useState("")
-  const [poNumber, setPoNumber] = useState("")
-  const [address, setAddress] = useState("")
-  const [contactNumber, setContactNumber] = useState("")
-  const [deliveryMethod, setDeliveryMethod] = useState("pick-up")
-  const [uploadedFileUrls, setUploadedFileUrls] = useState<string[]>([])
+  const [formData, setFormData] = useState<FormData>({
+    companyName: "",
+    poNumber: "",
+    contactNumber: "",
+    deliveryMethod: "pick-up",
+    address: "",
+    region: undefined,
+    selectedDate: undefined,
+    attachedPOUrl: "",
+  })
   const [uploadedFileNames, setUploadedFileNames] = useState<string[]>([])
-  const [attachedPOUrl, setApprovedPOUrl] = useState("")
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>()
-  const [region, setRegion] = useState<keyof typeof SHIPPING_RATES | "">("")
-
 
   const totalPrice = items.reduce((total, item) => {
     return total + Number(item.price) * item.quantity
   }, 0)
 
-  const shippingFee = region && deliveryMethod === "delivery" ? SHIPPING_RATES[region] : 0
+  const shippingFee = formData.region && formData.deliveryMethod === "delivery" ? SHIPPING_RATES[formData.region] : 0
   const finalTotal = totalPrice + shippingFee
 
   const handleFileUpload = (res: UploadThingFile[]) => {
     if (res && res.length > 0) {
       const fileUrl = res[0].url
       const fileName = res[0].name
-      setApprovedPOUrl(fileUrl)
-      setUploadedFileUrls([fileUrl])
+      setFormData(prev => ({ ...prev, attachedPOUrl: fileUrl }))
       setUploadedFileNames([fileName])
       toast.success("Upload Completed")
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleDeliveryMethodChange = (value: "pick-up" | "delivery") => {
+    setFormData(prev => ({ ...prev, deliveryMethod: value }))
+  }
+
+  const handleRegionChange = (value: string) => {
+    setFormData(prev => ({ ...prev, region: value as ShippingRegion }))
+  }
+
+  const handleDateChange = (date: Date | undefined) => {
+    setFormData(prev => ({ ...prev, selectedDate: date }))
+  }
+
+  const validateForm = (): string[] => {
+    try {
+      formSchema.parse(formData)
+      return []
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return error.errors.map(err => err.message)
+      }
+      return ["An unknown error occurred"]
     }
   }
 
@@ -85,18 +130,9 @@ export default function Summary() {
       return
     }
 
-    if (!companyName || !poNumber || !contactNumber || !attachedPOUrl) {
-      toast.error("Company Name, PO #, and Contact Number are required.")
-      return
-    }
-
-    if (deliveryMethod === "delivery" && !address) {
-      toast.error("Please fill in the delivery address.")
-      return
-    }
-
-    if (uploadedFileUrls.length === 0) {
-      toast.error("Please upload the approved P.O.")
+    const errors = validateForm()
+    if (errors.length > 0) {
+      errors.forEach(error => toast.error(error))
       return
     }
 
@@ -117,23 +153,18 @@ export default function Summary() {
 
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
         orderItems,
-        deliveryMethod,
-        companyName,
-        poNumber,
-        address: deliveryMethod === "delivery" ? address : "",
-        contactNumber,
-        attachedPOUrl,
+        ...formData,
         clientName: session.name,
         clientEmail: session.email,
         shippingFee,
-        totalAmount: finalTotal,
+        totalAmountItemAndShipping: finalTotal, // Send the total including shipping
       })
 
       if (response.status === 201) {
         toast.success("Order created successfully! Redirecting...")
         removeAll()
         setTimeout(() => {
-          window.location.href = response.data.redirectUrl || "/"
+          router.push('/')
         }, 500)
       } else {
         toast.error("Checkout failed. Please try again.")
@@ -186,16 +217,16 @@ export default function Summary() {
               <div>
                 <h3 className="text-md font-medium mb-2">Delivery method</h3>
                 <RadioGroup
-                  value={deliveryMethod}
-                  onValueChange={setDeliveryMethod}
+                  value={formData.deliveryMethod}
+                  onValueChange={handleDeliveryMethodChange}
                   className="grid grid-cols-2 gap-4"
                 >
-                  <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${deliveryMethod === "pick-up" ? "border-primary" : "border-gray-200"}`}>
+                  <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${formData.deliveryMethod === "pick-up" ? "border-primary" : "border-gray-200"}`}>
                     <RadioGroupItem value="pick-up" id="pick-up" />
                     <Label htmlFor="pick-up" className="cursor-pointer">Pick-up in store</Label>
                     <HandCoins className="h-5 w-5" />
                   </div>
-                  <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${deliveryMethod === "delivery" ? "border-primary" : "border-gray-200"}`}>
+                  <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${formData.deliveryMethod === "delivery" ? "border-primary" : "border-gray-200"}`}>
                     <RadioGroupItem value="delivery" id="delivery" />
                     <Label htmlFor="delivery" className="cursor-pointer">Delivery</Label>
                     <Truck className="h-5 w-5" />
@@ -203,21 +234,21 @@ export default function Summary() {
                 </RadioGroup>
               </div>
 
-              {deliveryMethod === "pick-up" && (
+              {formData.deliveryMethod === "pick-up" && (
                 <div>
                   <h3 className="text-md font-medium mb-2">Pickup date & time</h3>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button variant="outline" className="w-full justify-start text-left font-normal">
-                        {selectedDate ? format(selectedDate, "PPP") : "Pick a date"}
+                        {formData.selectedDate ? format(formData.selectedDate, "PPP") : "Pick a date"}
                         <CalendarIcon className="ml-2 h-4 w-4 opacity-50" />
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={selectedDate}
-                        onSelect={setSelectedDate}
+                        selected={formData.selectedDate}
+                        onSelect={handleDateChange}
                         initialFocus
                       />
                     </PopoverContent>
@@ -225,17 +256,17 @@ export default function Summary() {
                 </div>
               )}
 
-              {deliveryMethod === "delivery" && (
+              {formData.deliveryMethod === "delivery" && (
                 <div>
                   <h3 className="text-md font-medium mb-2">Delivery Location</h3>
-                  <Select value={region} onValueChange={(value) => setRegion(value as keyof typeof SHIPPING_RATES)}>
+                  <Select value={formData.region} onValueChange={handleRegionChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your region" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.entries(SHIPPING_RATES).map(([region, rate]) => (
+                      {(Object.keys(SHIPPING_RATES) as ShippingRegion[]).map((region) => (
                         <SelectItem key={region} value={region}>
-                          {region} 
+                          {region}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -248,34 +279,38 @@ export default function Summary() {
                 <div className="space-y-2">
                   <Input
                     type="text"
+                    name="companyName"
                     placeholder="Company Name"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
+                    value={formData.companyName}
+                    onChange={handleInputChange}
                     className="w-full"
                     required
                   />
                   <Input
                     type="text"
+                    name="poNumber"
                     placeholder="PO #"
-                    value={poNumber}
-                    onChange={(e) => setPoNumber(e.target.value)}
+                    value={formData.poNumber}
+                    onChange={handleInputChange}
                     className="w-full"
                     required
                   />
                   <Input
                     type="text"
+                    name="contactNumber"
                     placeholder="Contact Number"
-                    value={contactNumber}
-                    onChange={(e) => setContactNumber(e.target.value)}
+                    value={formData.contactNumber}
+                    onChange={handleInputChange}
                     className="w-full"
                     required
                   />
-                  {deliveryMethod === "delivery" && (
+                  {formData.deliveryMethod === "delivery" && (
                     <Input
                       type="text"
+                      name="address"
                       placeholder="Address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      value={formData.address}
+                      onChange={handleInputChange}
                       className="w-full"
                       required
                     />
@@ -327,6 +362,7 @@ export default function Summary() {
                       <div className="flex flex-row ml-auto items-end">
                         <Currency value={Number(item.price) * item.quantity} />
                       </div>
+                
                     </div>
                   </li>
                 ))}
@@ -344,67 +380,87 @@ export default function Summary() {
                 <Currency value={finalTotal} />
               </div>
             </div>
- {/* Enhanced Order Details section */}
- <div>
-          <h2 className="text-xl font-semibold mb-6">Order Details</h2>
-          <div className="grid gap-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Company Information */}
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <Building2 className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Company Name</p>
-                    <p className="font-medium">Anchor Hotel</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <Phone className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Contact Number</p>
-                    <p className="font-medium">09123934567</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <FileText className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">PO #</p>
-                    <p className="font-medium">PO #51251</p>
-                  </div>
-                </div>
-              </div>
+            {/* Enhanced Order Details section */}
+            <div>
+              <h2 className="text-xl font-semibold mb-6">Order Details</h2>
+              <div className="grid gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Company Information */}
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <User className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Customer Name</p>
+                        <p className="font-bold">{session?.name}</p>
+                      </div>
+                    </div>
 
-              {/* Delivery Information */}
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Delivery Method</p>
-                    <p className="font-medium">Pick-up</p>
+                    <div className="flex items-start space-x-3">
+                      <Building2 className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Company Name</p>
+                        <p className="font-bold text-sm">{formData.companyName}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <Phone className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Contact Number</p>
+                        <p className="font-bold">{formData.contactNumber}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <FileText className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">PO #</p>
+                        <p className="font-bold">{formData.poNumber}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <CalendarIcon className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Pickup Date</p>
-                    <p className="font-medium">November 13th, 2024</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-3">
-                  <FileCheck className="w-5 h-5 text-muted-foreground mt-0.5" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Attached File</p>
-                    <p className="font-medium">rd4.jpg</p>
+
+                  {/* Delivery Information */}
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Delivery Method</p>
+                        <p className="font-bold">{formData.deliveryMethod}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <MapPin className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Delivery Address</p>
+                        <p className="font-bold text-sm">{formData.address || "N/A"}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <CalendarIcon className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Pickup Date</p>
+                        <p className="font-bold">
+                          {formData.deliveryMethod === "delivery" 
+                            ? "N/A" 
+                            : formData.selectedDate?.toDateString() || "Not selected"}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3">
+                      <FileCheck className="w-5 h-5 text-muted-foreground mt-0.5" />
+                      <div>
+                        <p className="text-sm text-muted-foreground">Attached File</p>
+                        <p className="font-bold">{uploadedFileNames[0] || "No file attached"}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
             <div className="flex justify-between mt-6">
               <Button variant="outline" onClick={() => setStep(1)}>Back</Button>
               <AlertDialog>

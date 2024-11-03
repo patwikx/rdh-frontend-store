@@ -113,23 +113,19 @@ export default function DataTableDemo() {
       ),
     },
     {
-      accessorKey: "orderItems",
+      accessorKey: "totalAmountItemAndShipping",
       header: "Total Amount",
       cell: ({ row }) => {
-        const orderItems = row.getValue("orderItems") as OrderItem[]
-        const totalAmount =
-          orderItems.length > 0
-            ? orderItems.reduce((sum, item) => sum + item.totalItemAmount, 0)
-            : 0
-
+        const totalAmountItemAndShipping = row.getValue("totalAmountItemAndShipping") as number;
+    
         const formattedAmount = new Intl.NumberFormat("en-PH", {
           style: "currency",
           currency: "PHP",
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
-        }).format(totalAmount)
-
-        return <div className="font-bold text-center">{formattedAmount}</div>
+        }).format(totalAmountItemAndShipping);
+    
+        return <div className="font-bold text-center">{formattedAmount}</div>;
       },
     },
     {
