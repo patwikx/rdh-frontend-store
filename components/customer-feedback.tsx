@@ -69,6 +69,7 @@ export const CustomerFeedback = ({ feedbacks }: CustomerFeedbackProps) => {
                         width={32}
                         height={32}
                         className="rounded-full mr-2"
+                        priority
                       />
                       <div>
                         <h3 className="font-semibold text-sm">{feedback.name}</h3>

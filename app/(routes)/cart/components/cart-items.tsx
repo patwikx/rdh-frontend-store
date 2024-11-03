@@ -45,6 +45,8 @@ const CartItems: React.FC<CartItemsProps> = ({ data }) => {
           src={data.images[0].url}
           alt={data.name}
           className="object-cover object-center"
+          sizes='auto'
+          priority
         />
       </div>
       <div className="flex-grow space-y-2">

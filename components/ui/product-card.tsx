@@ -65,6 +65,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, viewMode }) => {
             fill
             sizes='auto'
             className="object-cover transition-transform duration-300 group-hover:scale-110"
+            priority
           />
           {discountPercentage > 0 && (
             <Badge className="absolute top-1 left-1 bg-red-500 text-white text-xs px-1.5 py-0.5">

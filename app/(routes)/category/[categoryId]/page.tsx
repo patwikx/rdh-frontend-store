@@ -5,9 +5,7 @@ import getColors from "@/actions/get-colors"
 import getProducts from "@/actions/get-products"
 import getSizes from "@/actions/get-sizes"
 import Billboards from "@/components/billboard"
-import Container from "@/components/ui/container"
 import CategoryClient from '@/components/category-client'
-
 
 interface CategoryPageProps {
   params: {
@@ -39,24 +37,22 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const category = await getCategory(params.categoryId)
 
   if (!category) {
-    return <div>Category not found</div>
+    return <div className="flex items-center justify-center h-screen">Category not found</div>
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <Container>
-        <Billboards data={category.billboard} />
-        <div className="px-4 sm:px-6 lg:px-8 py-8">
-          <CategoryClient 
-            products={products}
-            sizes={sizes}
-            colors={colors}
-            category={category}
-          />
-        </div>
-      </Container>
+    <div className="min-h-screen">
+      <Billboards data={category.billboard} />
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <CategoryClient 
+          products={products}
+          sizes={sizes}
+          colors={colors}
+          category={category}
+        />
+      </div>
     </div>
   )
 }
 
-export const revalidate = 3600 // revalidate every hour
+export const revalidate = 0

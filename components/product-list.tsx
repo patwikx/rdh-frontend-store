@@ -48,10 +48,6 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
     setCurrentPage(1)
   }
 
-  if (isLoading) {
-    return <ProductListSkeleton />
-  }
-
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-col sm:flex-row justify-between items-center">
@@ -134,37 +130,3 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
 }
 
 export default ProductList
-
-// Skeleton loader for ProductList
-export const ProductListSkeleton: React.FC = () => {
-  return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-col sm:flex-row justify-between items-center">
-        <Skeleton className="h-8 w-48" />
-        <div className="flex items-center space-x-2 mt-2 sm:mt-0">
-          <Skeleton className="h-10 w-[180px]" />
-          <Skeleton className="h-10 w-10" />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {Array(10).fill(0).map((_, index) => (
-            <div key={index} className="space-y-2">
-              <Skeleton className="h-48 w-full" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-2/3" />
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between items-center mt-8">
-          <div className="flex items-center space-x-2">
-            <Skeleton className="h-9 w-24" />
-            <Skeleton className="h-5 w-32" />
-            <Skeleton className="h-9 w-24" />
-          </div>
-          <Skeleton className="h-10 w-[180px]" />
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
