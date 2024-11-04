@@ -24,7 +24,7 @@ interface NavbarActionsProps {
   data?: Product
 }
 
-export const revalidate = 0
+export const revalidate = 0;
 
 const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
   const router = useRouter()

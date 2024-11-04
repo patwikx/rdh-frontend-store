@@ -7,7 +7,7 @@ import getProducts from "@/actions/get-products"
 import { SearchBar } from "./searchbar"
 import { Label } from "./ui/label"
 
-export const revalidate = 0
+export const revalidate = 0;
 
 const Navbar = async () => {
   const categories = await getCategories()
@@ -39,13 +39,13 @@ const Navbar = async () => {
           <div className="hidden lg:flex items-center space-x-4">
             {categories.map((category) => (
               <Button
-                key={category.id}
+                key={category?.id}
                 variant="ghost"
                 className="text-sm font-medium transition-colors hover:text-primary"
                 asChild
               >
-                <Link href={`/category/${category.id}`}>
-                  {category.name}
+                <Link href={`/category/${category?.id}`}>
+                  {category?.name}
                 </Link>
               </Button>
             ))}
@@ -67,13 +67,13 @@ const Navbar = async () => {
       <div className="lg:hidden overflow-x-auto flex items-center py-4 px-4 space-x-4">
         {categories.map((category) => (
           <Button
-            key={category.id}
+            key={category?.id}
             variant="ghost"
             className="text-sm font-medium whitespace-nowrap"
             asChild
           >
-            <Link href={`/category/${category.id}`}>
-              {category.name}
+            <Link href={`/category/${category?.id}`}>
+              {category?.name}
             </Link>
           </Button>
         ))}

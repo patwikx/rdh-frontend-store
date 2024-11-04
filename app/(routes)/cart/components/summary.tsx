@@ -23,6 +23,8 @@ import useCart from "@/hooks/use-cart"
 import { useCurrentUser } from "@/hooks/use-current-user"
 import { UploadButton } from "@/utils/uploadthing"
 
+export const revalidate = 0;
+
 type UploadThingFile = {
   url: string
   name: string

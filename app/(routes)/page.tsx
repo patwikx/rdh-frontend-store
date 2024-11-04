@@ -64,7 +64,7 @@ const mockFeedbacks: Feedback[] = [
   }
 ]
 
-export const revalidate = 0
+export const revalidate = 0;
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const searchTerm = searchParams.search || ""
