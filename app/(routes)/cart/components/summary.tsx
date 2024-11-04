@@ -4,7 +4,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useRouter, useSearchParams } from "next/navigation"
 import axios from "axios"
-import { Building2, CalendarIcon, ChevronRight, FileCheck, FileText, HandCoins, MapPin, Phone, Truck, User } from "lucide-react"
+import { Building2, CalendarIcon, ChevronRight, FileCheck, FileText, HandCoins, MapPin, Phone, StoreIcon, Truck, User } from "lucide-react"
 import { toast } from "sonner"
 import { format } from "date-fns"
 import { z } from "zod"
@@ -224,7 +224,7 @@ export default function Summary() {
                   <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${formData.deliveryMethod === "pick-up" ? "border-primary" : "border-gray-200"}`}>
                     <RadioGroupItem value="pick-up" id="pick-up" />
                     <Label htmlFor="pick-up" className="cursor-pointer">Pick-up in store</Label>
-                    <HandCoins className="h-5 w-5" />
+                    <StoreIcon className="h-5 w-5" />
                   </div>
                   <div className={`flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer ${formData.deliveryMethod === "delivery" ? "border-primary" : "border-gray-200"}`}>
                     <RadioGroupItem value="delivery" id="delivery" />
