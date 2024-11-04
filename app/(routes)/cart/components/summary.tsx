@@ -256,23 +256,23 @@ export default function Summary() {
                 </div>
               )}
 
-              {formData.deliveryMethod === "delivery" && (
-                <div>
-                  <h3 className="text-md font-medium mb-2">Delivery Location</h3>
-                  <Select value={formData.region} onValueChange={handleRegionChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select your region" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {(Object.keys(SHIPPING_RATES) as ShippingRegion[]).map((region) => (
-                        <SelectItem key={region} value={region}>
-                          {region}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
+        {formData.deliveryMethod === "delivery" && (
+      <div>
+        <h3 className="text-md font-medium mb-2">Delivery Location</h3>
+        <Select value={formData.region} onValueChange={handleRegionChange}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select your region" />
+          </SelectTrigger>
+          <SelectContent>
+            {(Object.keys(SHIPPING_RATES) as ShippingRegion[]).map((region) => (
+              <SelectItem key={region} value={region}>
+                {region} - ₱{SHIPPING_RATES[region].toFixed(2)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+          )}
 
               <div>
                 <h3 className="text-md font-medium mb-2">Order Information</h3>
