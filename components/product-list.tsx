@@ -9,8 +9,9 @@ import ProductCard from "@/components/ui/product-card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
 import { Toggle } from "@/components/ui/toggle"
+
+export const revalidate = 0;
 
 interface ProductListProps {
   title: string
@@ -22,13 +23,6 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage, setItemsPerPage] = useState(10)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    // Simulate loading delay
-    const timer = setTimeout(() => setIsLoading(false), 1000)
-    return () => clearTimeout(timer)
-  }, [])
 
   const sortedItems = [...items].sort((a, b) => {
     if (sortBy === "priceLowToHigh") return Number(a.price) - Number(b.price)
