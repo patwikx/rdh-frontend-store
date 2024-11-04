@@ -4,12 +4,10 @@ import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Eye, Heart, ShoppingCart, Star } from "lucide-react"
-
 import { Product } from "@/types"
 import usePreviewModal from "@/hooks/use-preview-modal"
 import useCart from "@/hooks/use-cart"
 import useWishlist from "@/hooks/use-wishlist"
-
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
