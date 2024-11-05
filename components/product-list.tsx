@@ -74,7 +74,7 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
           <>
             <div className={`grid gap-4 ${
               viewMode === "grid" 
-                ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6" 
+                ? "grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5" 
                 : "grid-cols-1"
             }`}>
               {paginatedItems.map((item) => (

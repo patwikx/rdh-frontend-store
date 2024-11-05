@@ -41,13 +41,13 @@ export function SearchBar({ products }: SearchBarProps) {
   }, [searchTerm, debouncedSearch])
 
   return (
-    <div className="relative">
+    <div className="relative w-full max-w-2xl mx-auto">
       <div className="relative">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
           placeholder="Search items..."
-          className="pl-8 w-[200px] lg:w-[300px]"
+          className="pl-8 w-full"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => setIsDropdownVisible(true)}
@@ -63,13 +63,13 @@ export function SearchBar({ products }: SearchBarProps) {
               className="flex items-center p-4 hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
             >
               <div className="flex-shrink-0 mr-4">
-              <Image
-  src={product.images[0]?.url ?? '/placeholder.svg'}
-  alt={product.name}
-  width={60}
-  height={60}
-  className="rounded-md object-cover"
-/>
+                <Image
+                  src={product.images[0]?.url ?? '/placeholder.svg'}
+                  alt={product.name}
+                  width={60}
+                  height={60}
+                  className="rounded-md object-cover"
+                />
               </div>
               <div className="flex-grow">
                 <h3 className="font-semibold text-sm">{product.name}</h3>

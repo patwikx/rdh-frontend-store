@@ -20,11 +20,11 @@ export function Headerx () {
   return (
 
     <div className='flex mr-4'>
-    <div className='mt-1'>
+    <div className='mt-[5px]'>
     <DropdownMenu>
           <DropdownMenuTrigger asChild>
-  <Button variant="outline" className="relative h-10 w-10 rounded-full mt-1">
-    <Avatar className="h-10 w-10">
+  <Button variant="outline" size='icon' className="relative rounded-full hover:bg-primary hover:text-primary-foreground transition-colors duration-200">
+    <Avatar className="h-9 w-9">
       {user?.image ? (
         <AvatarImage src={user.image} alt={`${user?.name}`} />
       ) : (
