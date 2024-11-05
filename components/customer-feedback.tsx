@@ -68,6 +68,7 @@ export const CustomerFeedback = ({ feedbacks }: CustomerFeedbackProps) => {
                         alt={`${feedback.name}'s avatar`}
                         width={32}
                         height={32}
+                        sizes='auto'
                         className="rounded-full mr-2"
                         priority
                       />

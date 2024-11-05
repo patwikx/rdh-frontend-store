@@ -102,7 +102,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
         <SheetContent className="w-full sm:max-w-lg overflow-hidden" aria-describedby={undefined}>
           <SheetHeader>
             <SheetTitle className="flex items-center justify-center gap-2">
-              <Image src='/RDH.webp' width={50} height={50} alt="RD Hardware & Fishing Supply, Inc." className="rounded-full"/>
+              <Image src='/RDH.webp' width={50} height={50} sizes='auto' alt="RD Hardware & Fishing Supply, Inc." className="rounded-full"/>
               <span className="font-bold text-xl">RD Hardware & Fishing Supply, Inc.</span>
             </SheetTitle>
           </SheetHeader>

@@ -55,6 +55,7 @@ const Navbar = async () => {
               src="/RDH.webp"
               alt="RDHFSI Store Logo"
               fill
+              sizes='auto'
               className="object-contain"
               priority
             />
