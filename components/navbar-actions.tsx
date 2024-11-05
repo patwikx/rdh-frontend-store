@@ -99,7 +99,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
             </AnimatePresence>
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-full sm:max-w-lg overflow-hidden">
+        <SheetContent className="w-full sm:max-w-lg overflow-hidden" aria-describedby={undefined}>
           <SheetHeader>
             <SheetTitle className="flex items-center justify-center gap-2">
               <Image src='/RDH.webp' width={50} height={50} alt="RD Hardware & Fishing Supply, Inc." className="rounded-full"/>
