@@ -1,11 +1,8 @@
-import { addDays, subDays, format } from 'date-fns'
-import getBillboard from "@/actions/get-billboard"
+
 import getProducts from "@/actions/get-products"
-import Billboards from "@/components/billboard"
-import ProductList from "@/components/product-list"
-import { CustomerFeedback } from '@/components/customer-feedback'
 import CheckoutPage from './components/check-outpage'
 import ProductCarousel from './components/popular-items'
+import { MembershipBenefits } from '@/components/customer-benifits'
 
 export const revalidate = 0
 
@@ -23,6 +20,9 @@ export default async function FeaturedItems() {
               items={featuredProducts} 
               categoryId="featured"
             />
+            <div className='mt-8'>
+            <MembershipBenefits />
+            </div>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import Billboards from "@/components/billboard"
 import ProductList from "@/components/product-list"
 import { CustomerFeedback } from '@/components/customer-feedback'
 import ProductCarousel from './cart/components/popular-items'
+import { MembershipBenefits } from '@/components/customer-benifits'
 
 interface HomePageProps {
   searchParams: {
@@ -24,7 +25,7 @@ interface Feedback {
 const mockFeedbacks: Feedback[] = [
   {
     id: '1',
-    name: 'Arnold Nicolas',
+    name: 'Arnold N.',
     content: 'Great products and fast shipping! Will definitely buy again.',
     rating: 5,
     avatarUrl: 'https://utfs.io/f/CvBEyUsPwX7B7afB4TJ8OJiqhH6YyZGvzNfBo1CAPIbj2kX0',
@@ -32,7 +33,7 @@ const mockFeedbacks: Feedback[] = [
   },
   {
     id: '2',
-    name: 'Gerold Garin',
+    name: 'Gerold G.',
     content: 'The quality of the items exceeded my expectations. Highly recommended!',
     rating: 4,
     avatarUrl: 'https://utfs.io/f/CvBEyUsPwX7BjzGpe0WikdZnQmwRSeDW5A6b9PlKYzgB3JEI',
@@ -40,7 +41,7 @@ const mockFeedbacks: Feedback[] = [
   },
   {
     id: '3',
-    name: 'Larry Paler',
+    name: 'Larry P.',
     content: 'Excellent customer service. They quickly resolved an issue I had with my order.',
     rating: 5,
     avatarUrl: 'https://utfs.io/f/CvBEyUsPwX7BPdTr5mEmlxRKCHGfh8pBgtQo0uSIb9nEOLX7',
@@ -48,7 +49,7 @@ const mockFeedbacks: Feedback[] = [
   },
   {
     id: '4',
-    name: 'Argie Tacay',
+    name: 'Argie T.',
     content: 'I love the variety of products available. Something for everyone!',
     rating: 5,
     avatarUrl: 'https://utfs.io/f/CvBEyUsPwX7BCJEoVzsPwX7BtS1nQxljJhrL8kK05GMop2R4',
@@ -56,7 +57,7 @@ const mockFeedbacks: Feedback[] = [
   },
   {
     id: '5',
-    name: 'Cezar Regalado',
+    name: 'Cezar R.',
     content: 'The website is easy to navigate and the checkout process is smooth.',
     rating: 4,
     avatarUrl: 'https://utfs.io/f/CvBEyUsPwX7BfGhyk0QTKhGEd16CWeLZMHJRSxtk2vXI9sNl',
@@ -107,6 +108,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             items={fishingSupplies} 
             categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
           />
+          <MembershipBenefits />
           <CustomerFeedback feedbacks={mockFeedbacks} />
         </div>
       </div>

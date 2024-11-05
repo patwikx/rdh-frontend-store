@@ -1,5 +1,6 @@
 import getProduct from "@/actions/get-product";
 import getProducts from "@/actions/get-products";
+import { MembershipBenefits } from "@/components/customer-benifits";
 import Gallery from "@/components/gallery/intex";
 import Info from "@/components/info";
 import ProductList from "@/components/product-list";
@@ -32,7 +33,12 @@ const ProductPage: React.FC<ProductPageProps> = async ({
                 <hr className="my-12 border-gray-200" />
                 <div className="px-4 py-8 sm:px-6 lg:px-8">
                     <ProductList title="Related Items" items={suggestedProducts} />
+                    <div className="mt-8">
+                <MembershipBenefits />
                 </div>
+                </div>
+
+
             </div>
         </div>
     );
