@@ -9,6 +9,7 @@ import ProductCarousel from './cart/components/popular-items'
 import { MembershipBenefits } from '@/components/customer-benifits'
 import { ProductCarouselSkeleton } from '@/components/carousel-skeletons'
 
+export const revalidate = 0;
 
 interface HomePageProps {
   searchParams: {

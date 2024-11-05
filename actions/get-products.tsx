@@ -2,7 +2,6 @@ import { Product } from "@/types";
 
 import qs from "query-string"
 
-export const revalidate = 0;
 
 const URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
 
