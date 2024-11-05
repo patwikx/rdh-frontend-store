@@ -1,4 +1,5 @@
-import { addDays, subDays, format } from 'date-fns'
+import { Suspense } from 'react'
+import { subDays } from 'date-fns'
 import getBillboard from "@/actions/get-billboard"
 import getProducts from "@/actions/get-products"
 import Billboards from "@/components/billboard"
@@ -6,6 +7,8 @@ import ProductList from "@/components/product-list"
 import { CustomerFeedback } from '@/components/customer-feedback'
 import ProductCarousel from './cart/components/popular-items'
 import { MembershipBenefits } from '@/components/customer-benifits'
+import { ProductCarouselSkeleton } from '@/components/carousel-skeletons'
+
 
 interface HomePageProps {
   searchParams: {
@@ -21,7 +24,6 @@ interface Feedback {
   avatarUrl: string
   date: Date
 }
-
 const mockFeedbacks: Feedback[] = [
   {
     id: '1',
@@ -65,53 +67,67 @@ const mockFeedbacks: Feedback[] = [
   }
 ]
 
-export const revalidate = 0;
 
-export default async function HomePage({ searchParams }: HomePageProps) {
-  const searchTerm = searchParams.search || ""
-
+async function FeaturedProducts({ searchTerm }: { searchTerm: string }) {
   const featuredProducts = await getProducts({ isFeatured: true })
-  const officeSupplies = await getProducts({ categoryId: "dd32aa8a-5652-4e66-8875-b00eefd7a88c" })
-  const constructionSupplies = await getProducts({ categoryId: "1ed2e1ae-e21c-41f5-8ea9-e905afc23887" })
-  const industrialSupplies = await getProducts({ categoryId: "06a6d0a3-1fb4-482f-9e2e-cceaf965b90d" })
-  const billboard = await getBillboard("1821eed5-74de-4140-94bb-c46c5f9a0753")
-  const fishingSupplies = await getProducts({ categoryId: "8ad29b1a-f91f-4fe1-80f6-f83879ee74dd" })
-  
-
   const filteredProducts = featuredProducts.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
+  return <ProductList title="Popular Products" items={filteredProducts} />
+}
+
+async function CategoryCarousel({ title, categoryId }: { title: string, categoryId: string }) {
+  const products = await getProducts({ categoryId })
+  return <ProductCarousel title={title} items={products} categoryId={categoryId} />
+}
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const searchTerm = searchParams.search || ""
+  const billboardPromise = getBillboard("1821eed5-74de-4140-94bb-c46c5f9a0753")
 
   return (
     <div className="w-full">
       <div className="space-y-10 pb-10">
-        <Billboards data={billboard} />
+       
+          <BillboardSection promise={billboardPromise} />
+
         <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
-          <ProductList title="Popular Products" items={filteredProducts} />
-          <ProductCarousel 
-            title="Office Supplies" 
-            items={officeSupplies} 
-            categoryId="dd32aa8a-5652-4e66-8875-b00eefd7a88c"
-          />
-          <ProductCarousel 
-            title="Construction Supplies" 
-            items={constructionSupplies} 
-            categoryId="1ed2e1ae-e21c-41f5-8ea9-e905afc23887"
-          />
-          <ProductCarousel 
-            title="Industrial Supplies" 
-            items={industrialSupplies} 
-            categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
-          />
-                    <ProductCarousel 
-            title="Fishing Supplies" 
-            items={fishingSupplies} 
-            categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
-          />
+          <Suspense fallback={<div>Loading featured products...</div>}>
+            <FeaturedProducts searchTerm={searchTerm} />
+          </Suspense>
+          <Suspense fallback={<ProductCarouselSkeleton />}>
+            <CategoryCarousel 
+              title="Office Supplies" 
+              categoryId="dd32aa8a-5652-4e66-8875-b00eefd7a88c"
+            />
+          </Suspense>
+          <Suspense fallback={<ProductCarouselSkeleton />}>
+            <CategoryCarousel 
+              title="Construction Supplies" 
+              categoryId="1ed2e1ae-e21c-41f5-8ea9-e905afc23887"
+            />
+          </Suspense>
+          <Suspense fallback={<ProductCarouselSkeleton />}>
+            <CategoryCarousel 
+              title="Industrial Supplies" 
+              categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
+            />
+          </Suspense>
+          <Suspense fallback={<ProductCarouselSkeleton />}>
+            <CategoryCarousel 
+              title="Fishing Supplies" 
+              categoryId="8ad29b1a-f91f-4fe1-80f6-f83879ee74dd"
+            />
+          </Suspense>
           <MembershipBenefits />
           <CustomerFeedback feedbacks={mockFeedbacks} />
         </div>
       </div>
     </div>
   )
+}
+
+async function BillboardSection({ promise }: { promise: Promise<any> }) {
+  const billboard = await promise
+  return <Billboards data={billboard} />
 }
