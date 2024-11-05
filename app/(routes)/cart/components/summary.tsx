@@ -263,7 +263,7 @@ export default function Summary() {
         <h3 className="text-md font-medium mb-2">Delivery Location</h3>
         <Select value={formData.region} onValueChange={handleRegionChange}>
           <SelectTrigger>
-            <SelectValue placeholder="Select your region" />
+            <SelectValue placeholder="Select your location..." />
           </SelectTrigger>
           <SelectContent>
             {(Object.keys(SHIPPING_RATES) as ShippingRegion[]).map((region) => (
