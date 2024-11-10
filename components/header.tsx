@@ -47,7 +47,7 @@ export function Headerx () {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push("/my-orders")}>
-            My Orders 
+            My Orders
             <DropdownMenuShortcut><Package size={20} className='mr-2' /></DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => router.push("/settings")}>
