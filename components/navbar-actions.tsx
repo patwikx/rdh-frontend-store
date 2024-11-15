@@ -5,9 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { LogIn, ShoppingBag, Trash2, Plus, Minus, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-
 import useCart from "@/hooks/use-cart";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { Product } from "@/types";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Currency from "@/components/ui/currency";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import Headerx from "@/components/header";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 interface NavbarActionsProps {
   data?: Product;
