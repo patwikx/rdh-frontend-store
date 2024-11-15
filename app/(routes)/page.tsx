@@ -8,6 +8,7 @@ import { CustomerFeedback } from '@/components/customer-feedback'
 import ProductCarousel from './cart/components/popular-items'
 import { MembershipBenefits } from '@/components/customer-benifits'
 import { ProductCarouselSkeleton } from '@/components/carousel-skeletons'
+import { Loader } from '@/components/ui/loader'
 
 export const revalidate = 0;
 
@@ -93,31 +94,37 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <BillboardSection promise={billboardPromise} />
 
         <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
-          <Suspense fallback={<div>Loading featured products...</div>}>
+          <Suspense fallback={<div><Loader /></div>}>
             <FeaturedProducts searchTerm={searchTerm} />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Office Supplies" 
-              categoryId="49c79d92-8d41-4819-98e2-3d20be12dd95"
+              categoryId="33261320-c18d-4cd9-ab70-450290d82739"
             />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Construction Supplies" 
-              categoryId="a657c9bd-e161-4c96-92d2-f1bc12f3c277"
+              categoryId="97012272-31fd-49f9-a288-5ce9e03c94ba"
             />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Industrial Supplies" 
-              categoryId="bd375b65-d09b-409c-b63c-ffd34540d5cc"
+              categoryId="f4577152-01d5-4869-ab79-be3a377cd9fe"
             />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Fishing Supplies" 
-              categoryId="048561d8-9493-4c2d-8a63-1c11ac15f718"
+              categoryId="77d44069-20bb-4078-9507-51be4876f9ca"
+            />
+          </Suspense>
+          <Suspense fallback={<ProductCarouselSkeleton />}>
+            <CategoryCarousel 
+              title="Electrical Supplies" 
+              categoryId="fbdd6f73-a9e1-4ce2-aaa7-91151e263e74"
             />
           </Suspense>
           <MembershipBenefits />

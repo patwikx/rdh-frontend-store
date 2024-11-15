@@ -46,12 +46,19 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, items, categor
   return (
     <div className="w-full">
       <CardHeader className="flex flex-row justify-between items-center">
-        <div className="flex items-center space-x-4">
-          <CardTitle className="text-2xl font-bold">{title}</CardTitle>
-          <Button variant="outline" onClick={handleViewAll}>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+          <CardTitle className="text-2xl font-bold tracking-tight text-primary">{title}</CardTitle>
+          <Button
+            variant="outline"
+            onClick={handleViewAll}
+            className="self-start sm:self-auto group transition-colors hover:text-primary-foreground hover:bg-primary"
+          >
             View All
+            <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Button>
         </div>
+        <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+        <span className="mr-1 font-semibold">Sort by:</span>
         <Select value={sortBy} onValueChange={setSortBy}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Sort by" />
@@ -63,6 +70,8 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, items, categor
             <SelectItem value="newest">Newest Arrivals</SelectItem>
           </SelectContent>
         </Select>
+        </div>
+
       </CardHeader>
       <CardContent className="relative px-12">
         {items.length === 0 ? (

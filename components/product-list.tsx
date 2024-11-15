@@ -47,6 +47,7 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
       <CardHeader className="flex flex-col sm:flex-row justify-between items-center">
         <CardTitle className="text-2xl font-bold">{title}</CardTitle>
         <div className="flex items-center space-x-2 mt-2 sm:mt-0">
+          <span className="mr-1 font-semibold">Sort by:</span>
           <Select value={sortBy} onValueChange={setSortBy}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Sort by" />
