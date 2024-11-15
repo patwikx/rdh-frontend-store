@@ -18,7 +18,8 @@ import { LogoutButton } from "@/components/auth/logout-button";
 import { Bell, CircleUser, User2 } from "lucide-react";
 
 import { Button } from "../ui/button";
-import { useCurrentUser } from "@/lib/auth";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
 
 
 export const UserButton = () => {
