@@ -43,7 +43,7 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
   }
 
   return (
-    <Card className="w-full">
+    <div className="w-full">
       <CardHeader className="flex flex-col sm:flex-row justify-between items-center">
         <CardTitle className="text-2xl font-bold">{title}</CardTitle>
         <div className="flex items-center space-x-2 mt-2 sm:mt-0">
@@ -119,7 +119,7 @@ const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
           </>
         )}
       </CardContent>
-    </Card>
+    </div>
   )
 }
 

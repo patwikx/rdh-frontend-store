@@ -44,7 +44,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, items, categor
   }
 
   return (
-    <Card className="w-full">
+    <div className="w-full">
       <CardHeader className="flex flex-row justify-between items-center">
         <div className="flex items-center space-x-4">
           <CardTitle className="text-2xl font-bold">{title}</CardTitle>
@@ -99,7 +99,7 @@ const ProductCarousel: React.FC<ProductCarouselProps> = ({ title, items, categor
           </>
         )}
       </CardContent>
-    </Card>
+    </div>
   )
 }
 

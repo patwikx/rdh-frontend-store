@@ -31,7 +31,7 @@ export function MembershipBenefits() {
   ]
 
   return (
-    <Card className="w-full bg-background">
+    <div className="w-full bg-background">
       <CardContent className="p-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold mb-2">Join the RDHFSI Club!</h2>
@@ -53,6 +53,6 @@ export function MembershipBenefits() {
           </Button>
         </div>
       </CardContent>
-    </Card>
+    </div>
   )
 }

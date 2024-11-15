@@ -99,25 +99,25 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Office Supplies" 
-              categoryId="dd32aa8a-5652-4e66-8875-b00eefd7a88c"
+              categoryId="49c79d92-8d41-4819-98e2-3d20be12dd95"
             />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Construction Supplies" 
-              categoryId="1ed2e1ae-e21c-41f5-8ea9-e905afc23887"
+              categoryId="a657c9bd-e161-4c96-92d2-f1bc12f3c277"
             />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Industrial Supplies" 
-              categoryId="06a6d0a3-1fb4-482f-9e2e-cceaf965b90d"
+              categoryId="bd375b65-d09b-409c-b63c-ffd34540d5cc"
             />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Fishing Supplies" 
-              categoryId="8ad29b1a-f91f-4fe1-80f6-f83879ee74dd"
+              categoryId="048561d8-9493-4c2d-8a63-1c11ac15f718"
             />
           </Suspense>
           <MembershipBenefits />
