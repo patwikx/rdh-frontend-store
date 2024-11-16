@@ -94,7 +94,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <BillboardSection promise={billboardPromise} />
 
         <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
-          <Suspense fallback={<div><Loader /></div>}>
+          <Suspense>
             <FeaturedProducts searchTerm={searchTerm} />
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
