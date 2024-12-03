@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/ui/icons"
 import { toast } from "sonner"
 import { signIn } from "next-auth/react"
-import { RegisterForm } from "@/components/auth/register-form"
 
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -73,7 +72,6 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
             )}
             Login
           </Button>
-          <RegisterForm />
          
         </div>
       </form>

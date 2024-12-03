@@ -9,16 +9,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Separator } from "@/components/ui/separator"
 import getCategories from "@/actions/get-categories"
 import getProducts from "@/actions/get-products"
 import { SearchBar } from "./searchbar"
-import { Label } from "./ui/label"
 
 export const revalidate = 0
 
 const Navbar = async () => {
-  const categories = await getCategories()
+  const categories = await getCategories();
   const products = await getProducts({ isFeatured: true })
 
   return (
