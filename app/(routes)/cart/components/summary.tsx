@@ -192,7 +192,7 @@ export default function Summary() {
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
           <div style="width: 48%;">
             <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Customer Information</h3>
-            <p style="margin: 5px 0;"><strong>Name:</strong> ${session?.name}</p>
+            <p style="margin: 5px 0;"><strong>Name:</strong> ${session?.firstName} ${session?.lastName}</p>
             <p style="margin: 5px 0;"><strong>Email:</strong> ${session?.email}</p>
             <p style="margin: 5px 0;"><strong>Company:</strong> ${formData.companyName}</p>
             <p style="margin: 5px 0;"><strong>Contact:</strong> ${formData.contactNumber}</p>
@@ -229,6 +229,7 @@ export default function Summary() {
     
     let itemsHtml = items.map(item => `
       <tr>
+      <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">${item.barcode}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">${item.name}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">${item.quantity}</td>
         <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">${formatCurrency(Number(item.price))}</td>
@@ -255,6 +256,7 @@ export default function Summary() {
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background-color: #f1f5f9;">
+              <th style="padding: 12px; text-align: left;">Barcode</th>
                 <th style="padding: 12px; text-align: left;">Product</th>
                 <th style="padding: 12px; text-align: center;">Quantity</th>
                 <th style="padding: 12px; text-align: right;">Unit Price</th>
@@ -284,7 +286,7 @@ export default function Summary() {
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
           <div style="width: 48%;">
             <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Customer Information</h3>
-            <p style="margin: 5px 0;"><strong>Name:</strong> ${session?.name}</p>
+            <p style="margin: 5px 0;"><strong>Name:</strong> ${session?.firstName} ${session?.lastName}</p>
             <p style="margin: 5px 0;"><strong>Email:</strong> ${session?.email}</p>
             <p style="margin: 5px 0;"><strong>Company:</strong> ${formData.companyName}</p>
             <p style="margin: 5px 0;"><strong>Contact:</strong> ${formData.contactNumber}</p>
