@@ -305,8 +305,8 @@ export default function Summary() {
         </div>
         
         <div style="text-align: center; color: #64748b; font-size: 14px; margin-top: 30px;">
-          <p>This is an automated message from the RD Realty ordering system.</p>
-          <p>&copy; ${new Date().getFullYear()} RD Realty. All rights reserved.</p>
+          <p>This is an automated message from the RDHFSI E-Commerce system.</p>
+          <p>&copy; ${new Date().getFullYear()} RD Hardware & Fishing Supply, Inc. All rights reserved.</p>
         </div>
       </div>
     `;
