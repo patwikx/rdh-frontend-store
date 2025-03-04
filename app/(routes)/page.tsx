@@ -99,12 +99,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </Suspense>
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
-              title="Office Supplies" 
-              categoryId="33261320-c18d-4cd9-ab70-450290d82739"
-            />
-          </Suspense>
-          <Suspense fallback={<ProductCarouselSkeleton />}>
-            <CategoryCarousel 
               title="Construction Supplies" 
               categoryId="97012272-31fd-49f9-a288-5ce9e03c94ba"
             />
@@ -127,6 +121,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               categoryId="fbdd6f73-a9e1-4ce2-aaa7-91151e263e74"
             />
           </Suspense>
+                   <Suspense fallback={<ProductCarouselSkeleton />}>
+            <CategoryCarousel 
+              title="D-I-Y Supplies" 
+              categoryId="8650fed0-d981-48e0-87ed-9e4c58689d2e"
+            />
+          </Suspense>
+          <Suspense fallback={<ProductCarouselSkeleton />}>
+            <CategoryCarousel 
+              title="Office Supplies" 
+              categoryId="33261320-c18d-4cd9-ab70-450290d82739"
+            />
+          </Suspense>
+          
           <MembershipBenefits />
           <CustomerFeedback feedbacks={mockFeedbacks} />
         </div>
