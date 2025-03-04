@@ -327,7 +327,7 @@ export default function Summary() {
       // Send email to store
       await axios.post('/api/send-email', {
         to: ['rdh_santiago@rdretailgroup.com.ph', 'operations@rdretailgroup.com.ph'],
-        name: 'RD Realty Store',
+        name: 'RDHFSI Store',
         subject: `New Order #${orderNumber} - ${formData.companyName}`,
         body: generateStoreEmailBody(orderNumber)
       });
