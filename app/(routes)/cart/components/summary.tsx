@@ -121,6 +121,226 @@ export default function Summary() {
     }
   }
 
+  const generateOrderNumber = () => {
+    const timestamp = new Date().getTime().toString().slice(-6);
+    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    return `ORD-${timestamp}-${random}`;
+  }
+
+  const formatCurrency = (value: number) => {
+    return new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP'
+    }).format(value);
+  }
+
+  const generateCustomerEmailBody = (orderNumber: string) => {
+    const formattedDate = formData.selectedDate ? format(formData.selectedDate, "MMMM dd, yyyy") : "Not specified";
+    
+    let itemsHtml = items.map(item => `
+      <tr>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">${item.name}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">${item.quantity}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">${formatCurrency(Number(item.price))}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">${formatCurrency(Number(item.price) * item.quantity)}</td>
+      </tr>
+    `).join('');
+
+    return `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 5px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: #2563eb; margin-bottom: 10px;">Order Confirmation</h1>
+          <p style="color: #64748b; font-size: 16px;">Thank you for your order!</p>
+        </div>
+        
+        <div style="background-color: #f8fafc; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          <h2 style="color: #334155; margin-top: 0;">Order #${orderNumber}</h2>
+          <p style="margin: 5px 0;"><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Order Details</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f1f5f9;">
+                <th style="padding: 12px; text-align: left;">Product</th>
+                <th style="padding: 12px; text-align: center;">Quantity</th>
+                <th style="padding: 12px; text-align: right;">Unit Price</th>
+                <th style="padding: 12px; text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" style="padding: 12px; text-align: right; font-weight: bold;">Subtotal:</td>
+                <td style="padding: 12px; text-align: right;">${formatCurrency(totalPrice)}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="padding: 12px; text-align: right; font-weight: bold;">Shipping Fee:</td>
+                <td style="padding: 12px; text-align: right;">${formatCurrency(shippingFee)}</td>
+              </tr>
+              <tr style="background-color: #f1f5f9;">
+                <td colspan="3" style="padding: 12px; text-align: right; font-weight: bold;">Total:</td>
+                <td style="padding: 12px; text-align: right; font-weight: bold;">${formatCurrency(finalTotal)}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+          <div style="width: 48%;">
+            <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Customer Information</h3>
+            <p style="margin: 5px 0;"><strong>Name:</strong> ${session?.name}</p>
+            <p style="margin: 5px 0;"><strong>Email:</strong> ${session?.email}</p>
+            <p style="margin: 5px 0;"><strong>Company:</strong> ${formData.companyName}</p>
+            <p style="margin: 5px 0;"><strong>Contact:</strong> ${formData.contactNumber}</p>
+            <p style="margin: 5px 0;"><strong>PO Number:</strong> ${formData.poNumber}</p>
+          </div>
+          
+          <div style="width: 48%;">
+            <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Delivery Information</h3>
+            <p style="margin: 5px 0;"><strong>Method:</strong> ${formData.deliveryMethod === "pick-up" ? "Pick-up in store" : "Delivery"}</p>
+            ${formData.deliveryMethod === "pick-up" ? 
+              `<p style="margin: 5px 0;"><strong>Pickup Date:</strong> ${formattedDate}</p>` : 
+              `<p style="margin: 5px 0;"><strong>Delivery Address:</strong> ${formData.address}</p>
+               <p style="margin: 5px 0;"><strong>Region:</strong> ${formData.region || "Not specified"}</p>`
+            }
+          </div>
+        </div>
+        
+        <div style="background-color: #f8fafc; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #334155; margin-top: 0;">Next Steps</h3>
+          <p>Your order has been received and is being processed. You will receive updates on your order status.</p>
+          <p>If you have any questions, please contact our customer service.</p>
+        </div>
+        
+        <div style="text-align: center; color: #64748b; font-size: 14px; margin-top: 30px;">
+          <p>Thank you for shopping with us!</p>
+          <p>&copy; ${new Date().getFullYear()} RD Realty. All rights reserved.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  const generateStoreEmailBody = (orderNumber: string) => {
+    const formattedDate = formData.selectedDate ? format(formData.selectedDate, "MMMM dd, yyyy") : "Not specified";
+    
+    let itemsHtml = items.map(item => `
+      <tr>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0;">${item.name}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: center;">${item.quantity}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">${formatCurrency(Number(item.price))}</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">${formatCurrency(Number(item.price) * item.quantity)}</td>
+      </tr>
+    `).join('');
+
+    return `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e2e8f0; border-radius: 5px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: #2563eb; margin-bottom: 10px;">New Order Received</h1>
+          <p style="color: #64748b; font-size: 16px;">A new order has been placed and requires your attention.</p>
+        </div>
+        
+        <div style="background-color: #f8fafc; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          <h2 style="color: #334155; margin-top: 0;">Order #${orderNumber}</h2>
+          <p style="margin: 5px 0;"><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+          <p style="margin: 5px 0;"><strong>PO Number:</strong> ${formData.poNumber}</p>
+          <p style="margin: 5px 0;"><strong>PO Attachment:</strong> <a href="${formData.attachedPOUrl}" target="_blank">${uploadedFileNames[0] || "View Attachment"}</a></p>
+        </div>
+        
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Order Details</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background-color: #f1f5f9;">
+                <th style="padding: 12px; text-align: left;">Product</th>
+                <th style="padding: 12px; text-align: center;">Quantity</th>
+                <th style="padding: 12px; text-align: right;">Unit Price</th>
+                <th style="padding: 12px; text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3" style="padding: 12px; text-align: right; font-weight: bold;">Subtotal:</td>
+                <td style="padding: 12px; text-align: right;">${formatCurrency(totalPrice)}</td>
+              </tr>
+              <tr>
+                <td colspan="3" style="padding: 12px; text-align: right; font-weight: bold;">Shipping Fee:</td>
+                <td style="padding: 12px; text-align: right;">${formatCurrency(shippingFee)}</td>
+              </tr>
+              <tr style="background-color: #f1f5f9;">
+                <td colspan="3" style="padding: 12px; text-align: right; font-weight: bold;">Total:</td>
+                <td style="padding: 12px; text-align: right; font-weight: bold;">${formatCurrency(finalTotal)}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+          <div style="width: 48%;">
+            <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Customer Information</h3>
+            <p style="margin: 5px 0;"><strong>Name:</strong> ${session?.name}</p>
+            <p style="margin: 5px 0;"><strong>Email:</strong> ${session?.email}</p>
+            <p style="margin: 5px 0;"><strong>Company:</strong> ${formData.companyName}</p>
+            <p style="margin: 5px 0;"><strong>Contact:</strong> ${formData.contactNumber}</p>
+          </div>
+          
+          <div style="width: 48%;">
+            <h3 style="color: #334155; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">Delivery Information</h3>
+            <p style="margin: 5px 0;"><strong>Method:</strong> ${formData.deliveryMethod === "pick-up" ? "Pick-up in store" : "Delivery"}</p>
+            ${formData.deliveryMethod === "pick-up" ? 
+              `<p style="margin: 5px 0;"><strong>Pickup Date:</strong> ${formattedDate}</p>` : 
+              `<p style="margin: 5px 0;"><strong>Delivery Address:</strong> ${formData.address}</p>
+               <p style="margin: 5px 0;"><strong>Region:</strong> ${formData.region || "Not specified"}</p>`
+            }
+          </div>
+        </div>
+        
+        <div style="background-color: #f8fafc; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+          <h3 style="color: #334155; margin-top: 0;">Action Required</h3>
+          <p>Please process this order according to company procedures. Update the order status in the system once processed.</p>
+        </div>
+        
+        <div style="text-align: center; color: #64748b; font-size: 14px; margin-top: 30px;">
+          <p>This is an automated message from the RD Realty ordering system.</p>
+          <p>&copy; ${new Date().getFullYear()} RD Realty. All rights reserved.</p>
+        </div>
+      </div>
+    `;
+  }
+
+  const sendOrderEmails = async (orderNumber: string) => {
+    try {
+      // Send email to customer
+      if (session?.email) {
+        await axios.post('/api/send-email', {
+          to: session.email,
+          name: session.name || 'Valued Customer',
+          subject: `Order Confirmation #${orderNumber}`,
+          body: generateCustomerEmailBody(orderNumber)
+        });
+      }
+      
+      // Send email to store
+      await axios.post('/api/send-email', {
+        to: 'plmiranda@rdrealty.com.ph',
+        name: 'RD Realty Store',
+        subject: `New Order #${orderNumber} - ${formData.companyName}`,
+        body: generateStoreEmailBody(orderNumber)
+      });
+      
+      return true;
+    } catch (error) {
+      console.error("Error sending order emails:", error);
+      return false;
+    }
+  }
+
   const onCheckout = async () => {
     if (!session || !session.email) {
       toast.error("You must log in first before proceeding.")
@@ -147,6 +367,7 @@ export default function Summary() {
     setLoading(true)
 
     try {
+      const orderNumber = generateOrderNumber();
       const orderItems = items.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
@@ -159,15 +380,24 @@ export default function Summary() {
         clientName: session.name,
         clientEmail: session.email,
         shippingFee,
-        totalAmountItemAndShipping: finalTotal, // Send the total including shipping
+        totalAmountItemAndShipping: finalTotal,
+        orderNumber
       })
 
       if (response.status === 201) {
-        toast.success("Order created successfully! Redirecting...")
+        // Send confirmation emails
+        const emailsSent = await sendOrderEmails(orderNumber);
+        
+        if (emailsSent) {
+          toast.success("Order created successfully! Order confirmation emails have been sent.")
+        } else {
+          toast.success("Order created successfully! However, there was an issue sending confirmation emails.")
+        }
+        
         removeAll()
         setTimeout(() => {
           router.push('/')
-        }, 500)
+        }, 1500)
       } else {
         toast.error("Checkout failed. Please try again.")
       }
