@@ -71,7 +71,7 @@ const mockFeedbacks: Feedback[] = [
 
 
 async function FeaturedProducts({ searchTerm }: { searchTerm: string }) {
-  const featuredProducts = await getProducts({ isFeatured: true })
+  const featuredProducts = await getProducts({})
   const filteredProducts = featuredProducts.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )

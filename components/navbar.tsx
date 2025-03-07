@@ -17,7 +17,7 @@ export const revalidate = 0
 
 const Navbar = async () => {
   const categories = await getCategories();
-  const products = await getProducts({ isFeatured: true })
+  const products = await getProducts({})
 
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background">

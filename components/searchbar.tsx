@@ -21,7 +21,7 @@ export function SearchBar({ products }: SearchBarProps) {
       const results = products.filter((product) =>
         product.name.toLowerCase().includes(term.toLowerCase())
       )
-      setSearchResults(results.slice(0, 5)) // Limit to 5 results for better UX
+      setSearchResults(results.slice(0, 10)) // Limit to 10 results for better UX
     },
     [products]
   )
@@ -64,7 +64,7 @@ export function SearchBar({ products }: SearchBarProps) {
             >
               <div className="flex-shrink-0 mr-4">
                 <Image
-                  src={product.images[0]?.url ?? '/placeholder.svg'}
+                  src={product.images[0]?.url ?? '/no-image.webp'} // Use '/no-image.png' as fallback
                   alt={product.name}
                   width={60}
                   height={60}
