@@ -64,7 +64,7 @@ export function SearchBar({ products }: SearchBarProps) {
             >
               <div className="flex-shrink-0 mr-4">
                 <Image
-                  src={product.images[0]?.url ?? '/no-image.webp'} // Use '/no-image.png' as fallback
+                  src={product.images[0]?.url ?? '/no-image.webpy'} // Use '/no-image.png' as fallback
                   alt={product.name}
                   width={60}
                   height={60}

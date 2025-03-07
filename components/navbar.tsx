@@ -12,12 +12,13 @@ import {
 import getCategories from "@/actions/get-categories"
 import getProducts from "@/actions/get-products"
 import { SearchBar } from "./searchbar"
+import getProductsSearch from "@/actions/get-products-search"
 
 export const revalidate = 0
 
 const Navbar = async () => {
   const categories = await getCategories();
-  const products = await getProducts({})
+  const products = await getProductsSearch({});
 
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background">
