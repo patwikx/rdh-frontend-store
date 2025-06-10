@@ -7,7 +7,7 @@ import { MembershipBenefits } from '@/components/customer-benifits'
 export const revalidate = 0
 
 export default async function FeaturedItems() {
-  const featuredProducts = await getProducts({ isFeatured: true })
+  const featuredProducts = await getProducts({ })
 
   return (
     <div className="w-full">
