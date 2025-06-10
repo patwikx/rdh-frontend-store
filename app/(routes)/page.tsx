@@ -94,9 +94,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <BillboardSection promise={billboardPromise} />
 
         <div className="flex flex-col gap-y-8 px-4 sm:px-6 lg:px-8">
+         
           <Suspense>
             <FeaturedProducts searchTerm={searchTerm} />
           </Suspense>
+           {/*
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Construction Supplies" 
@@ -127,6 +129,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               categoryId="8650fed0-d981-48e0-87ed-9e4c58689d2e"
             />
           </Suspense>
+          */}
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Office Supplies" 

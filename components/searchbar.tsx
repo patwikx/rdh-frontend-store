@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { Search } from 'lucide-react'
+import { Search, ImageIcon } from 'lucide-react' // 1. Icon imported
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -21,7 +21,7 @@ export function SearchBar({ products }: SearchBarProps) {
       const results = products.filter((product) =>
         product.name.toLowerCase().includes(term.toLowerCase())
       )
-      setSearchResults(results.slice(0, 10)) // Limit to 10 results for better UX
+      setSearchResults(results) // Limit to 10 results for better UX
     },
     [products]
   )
@@ -62,15 +62,24 @@ export function SearchBar({ products }: SearchBarProps) {
               href={`/product/${product.id}`}
               className="flex items-center p-4 hover:bg-accent hover:text-accent-foreground transition-colors duration-200"
             >
+              {/* --- 2. This is the updated block --- */}
               <div className="flex-shrink-0 mr-4">
-                <Image
-                  src={product.images[0]?.url ?? '/no-image.webpy'} // Use '/no-image.png' as fallback
-                  alt={product.name}
-                  width={60}
-                  height={60}
-                  className="rounded-md object-cover"
-                />
+                {product.images?.[0]?.url ? (
+                  <Image
+                    src={product.images[0].url}
+                    alt={product.name}
+                    width={60}
+                    height={60}
+                    className="rounded-md object-cover"
+                  />
+                ) : (
+                  <div className="w-[60px] h-[60px] flex items-center justify-center bg-muted rounded-md">
+                    <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                  </div>
+                )}
               </div>
+              {/* --- End of updated block --- */}
+              
               <div className="flex-grow">
                 <h3 className="font-semibold text-sm">{product.name}</h3>
                 <p className="text-sm font-medium">{product.price.toFixed(2)}</p>

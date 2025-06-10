@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { Eye, Heart, ShoppingCart, Star } from "lucide-react"
+import { Eye, Heart, ShoppingCart, Star, ImageIcon } from "lucide-react" // 1. ImageIcon imported
 import { Product } from "@/types"
 import usePreviewModal from "@/hooks/use-preview-modal"
 import useCart from "@/hooks/use-cart"
@@ -49,22 +49,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, viewMode }) => {
   const discountPercentage = 20
 
   return (
-    <Card 
+    <Card
       onClick={handleClick}
       className={`group cursor-pointer overflow-hidden transition-all duration-300 hover:shadow-lg ${
         viewMode === "list" ? "flex" : "max-w-[240px]"
       }`}
     >
       <CardContent className={`p-2 ${viewMode === "list" ? "w-1/3" : ""}`}>
-        <div className="relative aspect-square overflow-hidden rounded-md">
-          <Image
-            src={data?.images?.[0]?.url}
-            alt={data.name}
-            fill
-            sizes='auto'
-            className="object-cover transition-transform duration-300 group-hover:scale-110"
-            priority
-          />
+        <div className="relative aspect-square overflow-hidden rounded-md bg-muted"> {/* Added bg-muted for the fallback case */}
+          {/* --- 2. This is the updated conditional block --- */}
+          {data?.images?.[0]?.url ? (
+            <Image
+              src={data.images[0].url}
+              alt={data.name}
+              fill
+              sizes="auto"
+              className="object-cover transition-transform duration-300 group-hover:scale-110"
+              priority
+            />
+          ) : (
+            <div className="absolute inset-0 flex h-full w-full items-center justify-center">
+              <ImageIcon className="h-1/4 w-1/4 text-muted-foreground" />
+            </div>
+          )}
+          {/* --- End of updated block --- */}
+          
           {discountPercentage > 0 && (
             <Badge className="absolute top-1 left-1 bg-red-500 text-white text-xs px-1.5 py-0.5">
               -{discountPercentage}%
@@ -99,9 +108,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ data, viewMode }) => {
           </div>
         </div>
         <Badge variant="outline" className="text-xs px-2 py-0.5">{data.category.name}</Badge>
-        <Button 
-          onClick={onAddToCart} 
-          disabled={isLoading || data.stock === 0} 
+        <Button
+          onClick={onAddToCart}
+          disabled={isLoading || data.stock === 0}
           className="w-full h-8 text-xs mt-1"
           size="sm"
         >
