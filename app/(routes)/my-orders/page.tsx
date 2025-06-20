@@ -47,6 +47,7 @@ import { Loader } from "@/components/ui/loader"
 import { ErrorAnimation } from "@/components/ui/error"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
+import { Package, ShoppingCart } from "lucide-react"
 
 export default function DataTableDemo() {
   const { data: session } = useSession()
@@ -150,13 +151,16 @@ export default function DataTableDemo() {
         const status = row.getValue("orderStatus") as boolean
         return (
           <div className="flex justify-center">
-            <span
-              className={`px-2 py-1 rounded-full text-white text-sm font-semibold ${
-                status ? "bg-green-500" : "bg-yellow-500"
+            <Badge
+              variant={status ? "default" : "secondary"}
+              className={`${
+                status 
+                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                  : "bg-yellow-500 hover:bg-yellow-600 text-white"
               }`}
             >
               {status ? "Completed" : "Processing"}
-            </span>
+            </Badge>
           </div>
         )
       },
@@ -215,6 +219,32 @@ export default function DataTableDemo() {
     },
   })
 
+  // No Orders Empty State Component
+  const NoOrdersState = () => (
+    <div className="flex flex-col items-center justify-center py-16 px-4">
+      <div className="relative mb-6">
+        <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
+          <Package className="w-12 h-12 text-gray-400" />
+        </div>
+        <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+          <ShoppingCart className="w-4 h-4 text-blue-500" />
+        </div>
+      </div>
+      
+      <h3 className="text-xl font-semibold text-gray-900 mb-2">No Orders Yet</h3>
+      <p className="text-gray-500 text-center mb-6 max-w-md">
+        You haven&apos;t placed any orders yet. When you do, they&apos;ll appear here for you to track and manage.
+      </p>
+      
+      <Button 
+        onClick={() => router.push('/')} 
+        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2"
+      >
+        Start Shopping
+      </Button>
+    </div>
+  )
+
   return (
     <div>
       <CardTitle className="mt-4 ml-4 font-bold text-3xl">
@@ -223,13 +253,15 @@ export default function DataTableDemo() {
       <Card className="mt-4 ml-4 mr-4 mb-4 bg-white shadow-md rounded-lg">
         <CardContent>
           {loading ? (
-            <div className="flex justify-center items-center py-4">
+            <div className="flex justify-center items-center py-16">
               <Loader />
             </div>
           ) : error ? (
             <div>
               <ErrorAnimation />
             </div>
+          ) : orders.length === 0 ? (
+            <NoOrdersState />
           ) : (
             <>
               <div className="flex items-center py-4">
@@ -297,15 +329,23 @@ export default function DataTableDemo() {
                     ))}
                   </TableHeader>
                   <TableBody>
-                    {table.getRowModel().rows.map((row) => (
-                      <TableRow key={row.id} className="hover:bg-gray-50">
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id} className="p-4 text-center">
-                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                          </TableCell>
-                        ))}
+                    {table.getRowModel().rows?.length ? (
+                      table.getRowModel().rows.map((row) => (
+                        <TableRow key={row.id} className="hover:bg-gray-50">
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id} className="p-4 text-center">
+                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                          No results found.
+                        </TableCell>
                       </TableRow>
-                    ))}
+                    )}
                   </TableBody>
                 </Table>
               </div>
@@ -316,6 +356,7 @@ export default function DataTableDemo() {
                 </div>
                 <div className="space-x-2">
                   <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
@@ -323,6 +364,7 @@ export default function DataTableDemo() {
                     Previous
                   </Button>
                   <Button
+                    variant="outline"
                     size="sm"
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}

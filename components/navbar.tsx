@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Menu, Search, ShoppingCart } from "lucide-react"
+import { Menu } from "lucide-react"
 import NavbarActions from "@/components/navbar-actions"
 import { Button } from "@/components/ui/button"
 import {
@@ -10,42 +10,64 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import getCategories from "@/actions/get-categories"
-import getProducts from "@/actions/get-products"
 import { SearchBar } from "./searchbar"
 import getProductsSearch from "@/actions/get-products-search"
 
 export const revalidate = 0
 
+// For better type-safety, define the expected category names.
+type CategoryName = 
+  | "Office Supplies"
+  | "Construction Supplies"
+  | "Electrical Supplies"
+  | "Fishing Supplies"
+  | "Industrial Supplies"
+  | "DIY Supplies";
+
 const Navbar = async () => {
   const categories = await getCategories();
   const products = await getProductsSearch({});
+
+  // 1. Map category names to emojis
+  const categoryEmojis: Record<CategoryName, string> = {
+    "Office Supplies": "📎",
+    "Construction Supplies": "🔨",
+    "Electrical Supplies": "⚡️",
+    "Fishing Supplies": "🎣",
+    "Industrial Supplies": "⚙️",
+    "DIY Supplies": "🔧",
+  };
 
   return (
     <div className="sticky top-0 z-50 w-full border-b bg-background">
       <div className="flex h-16 items-center gap-x-4 px-4 sm:px-6">
         {/* Menu Button (Mobile) */}
         <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button 
-            variant="outline" 
-          >
-            <Menu className="h-5 w-5 mr-2" />
-            Menu
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-56">
-          {categories.map((category) => (
-            <DropdownMenuItem key={category.id} asChild>
-              <Link 
-                href={`/category/${category.id}`}
-                className="flex w-full items-center"
-              >
-                {category.name}
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="outline" 
+            >
+              <Menu className="h-5 w-5 mr-2" />
+              Menu
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start" className="w-56">
+            {categories.map((category) => (
+              <DropdownMenuItem key={category.id} asChild>
+                <Link 
+                  href={`/category/${category.id}`}
+                  className="flex w-full items-center gap-x-2" // Added gap for spacing
+                >
+                  {/* 2. Add the emoji with a fallback and styling */}
+                  <span className="text-lg">
+                    {categoryEmojis[category.name as CategoryName] || '📁'}
+                  </span>
+                  <span>{category.name}</span>
+                </Link>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Logo and Brand */}
         <Link href="/" className="flex items-center gap-x-2 shrink-0">

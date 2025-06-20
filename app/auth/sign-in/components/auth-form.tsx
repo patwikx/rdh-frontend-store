@@ -29,7 +29,7 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         redirect: true,
         callbackUrl: "/"
       })
-
+      toast.success("Login successful! Please wait while we redirect you.")
     } catch (error) {
       toast.error("An error occurred. Please try again.")
     } finally {

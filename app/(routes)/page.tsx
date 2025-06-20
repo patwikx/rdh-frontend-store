@@ -138,7 +138,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </Suspense>
           
           <MembershipBenefits />
-          <CustomerFeedback feedbacks={mockFeedbacks} />
+         {/* <CustomerFeedback feedbacks={mockFeedbacks} /> */}
         </div>
       </div>
     </div>
