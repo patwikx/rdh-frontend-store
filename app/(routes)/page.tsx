@@ -75,7 +75,7 @@ async function FeaturedProducts({ searchTerm }: { searchTerm: string }) {
   const filteredProducts = featuredProducts.filter((product) =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
-  return <ProductList title="Popular Products" items={filteredProducts} />
+  return <ProductList title="All Products" items={filteredProducts} />
 }
 
 async function CategoryCarousel({ title, categoryId }: { title: string, categoryId: string }) {
@@ -129,14 +129,14 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               categoryId="8650fed0-d981-48e0-87ed-9e4c58689d2e"
             />
           </Suspense>
-          */}
+          
           <Suspense fallback={<ProductCarouselSkeleton />}>
             <CategoryCarousel 
               title="Office Supplies" 
               categoryId="33261320-c18d-4cd9-ab70-450290d82739"
             />
           </Suspense>
-          
+          */}
           <MembershipBenefits />
          {/* <CustomerFeedback feedbacks={mockFeedbacks} /> */}
         </div>
