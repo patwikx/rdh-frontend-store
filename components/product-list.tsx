@@ -21,7 +21,7 @@ interface ProductListProps {
 const ProductList: React.FC<ProductListProps> = ({ title, items }) => {
   const [sortBy, setSortBy] = useState("featured")
   const [currentPage, setCurrentPage] = useState(1)
-  const [itemsPerPage, setItemsPerPage] = useState(50)
+  const [itemsPerPage, setItemsPerPage] = useState(35)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
 
   const sortedItems = [...items].sort((a, b) => {
