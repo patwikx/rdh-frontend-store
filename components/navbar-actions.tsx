@@ -122,10 +122,13 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
                     <motion.div key={item.id} layout initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.2 }}>
                       <Card className="overflow-hidden">
                         <CardContent className="p-4 flex items-center space-x-4">
-                          <Avatar className="h-16 w-16 rounded-md">
-                            <AvatarImage src={item.images[0].url || "/placeholder-image.png"} alt={item.name} />
-                            <AvatarFallback>{item.name.slice(0, 2).toUpperCase()}</AvatarFallback>
-                          </Avatar>
+<Avatar className="h-16 w-16 rounded-md">
+  <AvatarImage
+    src={item.images && item.images.length > 0 ? item.images[0].url : "/placeholder-image.png"}
+    alt={item.name}
+  />
+  <AvatarFallback>{item.name.slice(0, 2).toUpperCase()}</AvatarFallback>
+</Avatar>
                           <div className="flex-1 space-y-1">
                             <h3 className="font-semibold">{item.name}</h3>
                             <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
@@ -162,6 +165,8 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
           </Button>
         </SheetContent>
       </Sheet>
+
+      {/*
       {session ? (
         <Headerx />
       ) : (
@@ -170,6 +175,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ data }) => {
           Login / Sign-up
         </Button>
       )}
+        */}
     </div>
   );
 };
