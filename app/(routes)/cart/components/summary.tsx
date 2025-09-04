@@ -41,6 +41,8 @@ type ShippingRegion = keyof typeof SHIPPING_RATES;
 
 const formSchema = z.object({
   companyName: z.string().min(1, "Company Name is required"),
+  clientEmail: z.string().email("Invalid email address"),
+  clientName: z.string().min(1, "Client name is required"),
   poNumber: z.string().min(1, "PO Number is required"),
   contactNumber: z.string().min(1, "Contact Number is required"),
   deliveryMethod: z.enum(["pick-up", "delivery"]),
@@ -66,6 +68,8 @@ export default function Summary() {
   const [formData, setFormData] = useState<FormData>({
     companyName: "",
     poNumber: "",
+    clientEmail: "",
+    clientName: "",
     contactNumber: "",
     deliveryMethod: "pick-up",
     address: "",
@@ -315,10 +319,10 @@ export default function Summary() {
   const sendOrderEmails = async (orderNumber: string) => {
     try {
       // Send email to customer
-      if (session?.email) {
+      if (formData?.clientEmail) {
         await axios.post('/api/send-email', {
-          to: session.email,
-          name: session.name || 'Valued Customer',
+          to: formData.clientEmail,
+          name: formData.clientName || 'Valued Customer',
           subject: `Order Confirmation #${orderNumber}`,
           body: generateCustomerEmailBody(orderNumber)
         });
@@ -326,7 +330,7 @@ export default function Summary() {
       
       // Send email to store
       await axios.post('/api/send-email', {
-        to: ['rdh_santiago@rdretailgroup.com.ph', 'operationshead@rdretailgroup.com.ph'],
+        to: ['plmiranda@rdrealty.com.ph'],
         name: 'RDHFSI Store',
         subject: `New Order #${orderNumber} - ${formData.companyName}`,
         body: generateStoreEmailBody(orderNumber)
@@ -340,10 +344,6 @@ export default function Summary() {
   }
 
   const onCheckout = async () => {
-    if (!session || !session.email) {
-      toast.error("You must log in first before proceeding.")
-      return
-    }
 
     if (items.length === 0) {
       toast.error("No items in the cart.")
@@ -375,8 +375,8 @@ export default function Summary() {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/checkout`, {
         orderItems,
         ...formData,
-        clientName: session.name,
-        clientEmail: session.email,
+        clientName: formData.clientName,
+        clientEmail: formData.clientEmail,
         shippingFee,
         totalAmountItemAndShipping: finalTotal,
         orderNumber
@@ -507,6 +507,24 @@ export default function Summary() {
               <div>
                 <h3 className="text-md font-medium mb-2">Order Information</h3>
                 <div className="space-y-2">
+                   <Input
+                    type="email"
+                    name="clientEmail"
+                    placeholder="email@example.com"
+                    value={formData.clientEmail}
+                    onChange={handleInputChange}
+                    className="w-full"
+                    required
+                  />
+                    <Input
+                    type="text"
+                    name="clientName"
+                    placeholder="Client Name"
+                    value={formData.clientName}
+                    onChange={handleInputChange}
+                    className="w-full"
+                    required
+                  />
                   <Input
                     type="text"
                     name="companyName"
