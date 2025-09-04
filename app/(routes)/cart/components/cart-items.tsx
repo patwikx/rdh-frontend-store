@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Minus, Plus, Trash2 } from "lucide-react";
+import { HelpCircle, Minus, Plus, Trash2 } from "lucide-react";
 import Currency from "@/components/ui/currency";
 import useCart from "@/hooks/use-cart";
 import { Product } from "@/types";
@@ -55,14 +55,23 @@ const CartItems: React.FC<CartItemsProps> = ({ data }) => {
           className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200"
         >
           <div className="relative h-24 w-24 sm:h-32 sm:w-32 flex-shrink-0 overflow-hidden rounded-md">
-            <Image
-              fill
-              src={data.images[0].url}
-              alt={data.name}
-              className="object-cover object-center"
-              sizes="(max-width: 640px) 24vw, 32vw"
-              priority
-            />
+  {data.images && data.images.length > 0 ? (
+    <Image
+      fill
+      src={data.images[0].url}
+      alt={data.name}
+      className="object-cover object-center"
+      sizes="(max-width: 640px) 24vw, 32vw"
+      priority
+    />
+  ) : (
+    // Fallback with Lucide React HelpCircle icon
+    <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-500">
+      <HelpCircle className="h-10 w-10" aria-label="No image available" />
+      {/* Or if you imported Question: <Question className="h-10 w-10" /> */}
+      {/* Or if you imported CircleHelp: <CircleHelp className="h-10 w-10" /> */}
+    </div>
+  )}
           </div>
           <div className="flex-grow space-y-2 w-full sm:w-auto">
             <div className="flex justify-between items-start">
